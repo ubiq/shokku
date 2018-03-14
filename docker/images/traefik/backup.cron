@@ -1,0 +1,2 @@
+# Run daily
+0 0 * * *  /usr/local/bin/backup.sh

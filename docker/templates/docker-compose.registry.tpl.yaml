@@ -1,0 +1,40 @@
+version: '3.5'
+
+networks:
+  web:
+    external: true
+  back:
+    external: false
+
+services:
+
+  traefik:
+    image: shokku/traefik:1.0.0
+    restart: on-failure
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - web
+      - back
+    environment:
+      S3_BUCKET: "{{s3.bucket}}"
+      S3_PATH: "registry/traefik"
+    ports:
+      - "80:80"
+      - "443:443"
+
+  registry:
+    image: registry:2
+    restart: on-failure
+    networks:
+      - back
+    volumes:
+      - /var/registry:/var/lib/registry
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:{{docker.registry.domain}}"
+      - "traefik.port=5000"
+      - "traefik.backend=registry"
+      - "traefik.docker.network=web"
+      - "traefik.frontend.auth.basic={{docker.registry.auth}}"

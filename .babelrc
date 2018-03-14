@@ -1,0 +1,18 @@
+{
+  "presets": [
+    [
+      "env", {
+        "targets": {
+          "node": "current"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    ["module-resolver", {
+      "root": ["./src"],
+      "alias": {}
+    }],
+    ["extensible-destructuring"]
+  ]
+}

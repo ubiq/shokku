@@ -1,0 +1,50 @@
+################################################################
+# Global configuration
+################################################################
+
+debug = {{ .Env.TRAEFIK_DEBUG }}
+checkNewVersion = false
+logLevel = "{{ .Env.TRAEFIK_LOG_LEVEL }}"
+defaultEntryPoints = ["https","http"]
+constraints = ["{{ .Env.TRAEFIK_CONSTRAINTS_TAG }}"]
+
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+
+  {{if .Env.TRAEFIK_ENABLE_SSL}}
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  
+  [entryPoints.https]
+  address = ":443"
+  [entryPoints.https.tls]
+  {{end}}
+
+[retry]
+
+################################################################
+# Docker configuration backend
+################################################################
+
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+watch = true
+exposedbydefault = false
+swarmmode = {{ .Env.TRAEFIK_SWARM_MODE }}
+
+{{if .Env.TRAEFIK_LETS_ENCRYPT}}
+################################################################
+# Let's Encrypt configuration
+################################################################
+
+[acme]
+email = "{{ .Env.TRAEFIK_LETS_ENCRYPT_ACME_EMAIL }}"
+storage = "{{ .Env.TRAEFIK_LETS_ENCRYPT_ACME_PATH }}"
+entryPoint = "https"
+acmeLogging = true
+OnHostRule = true
+
+[acme.httpChallenge]
+  entryPoint = "http"
+{{end}}

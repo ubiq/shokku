@@ -1,0 +1,80 @@
+#%RAML 1.0
+
+title: Shokku API
+description: An Open Source Scalable Blockchain Infrastructure.
+baseUri: https://{network}.api.shokku.com/
+baseUriParameters:
+  network:
+    description: Network of API
+    type: string
+    enum:
+      - mainnet
+      - testnet
+    default: mainnet
+mediaType: application/json
+protocols: [ HTTPS ]
+securitySchemes:
+  jwt:
+    type: x-custom
+    description: |
+      Shokku supports JWT for authenticating all API requests.
+    describedBy:
+      headers:
+        Authorization:
+          description: |
+            Used to send a valid JWT token. Do not use with the "access_token" query string parameter.
+        type: string
+      responses:
+        401:
+          description: |
+            Bad or expired token. This can happen if the user or Shokku revoked or expired an access token. To fix, re-authenticate the user.
+
+types:
+  RPCRequest:
+    type: object
+    properties:
+      jsonrpc: string
+      id: integer
+      method: string
+      params: array
+
+  RPCResponse:
+    type: object
+    properties:
+      jsonrpc:
+        type: string
+        required: true
+        enum:
+          - "2.0"
+      id:
+        type: integer
+        required: true
+      result: string
+
+# securedBy: [ jwt ]
+
+/:
+  post:
+    description: |
+      A request using an "HTTP POST-compatible" (state-changing) JSON-RPC method. Use the `/jsonrpc/{network}/methods` endpoint to get the list of permitted methods. Use the regular Ubiq JSON-RPC format for the POST body.
+    body:
+      type: RPCRequest
+    responses:
+      200:
+        description: |
+          JSON-RPC response
+        body:
+          application/json:
+            type: RPCResponse
+      400:
+        description: |
+          Bad JSON in POST body or missing Content-Type header
+      404:
+        description: |
+          JSON-RPC method is not a valid POST method
+      500:
+        description: |
+          Server error
+      502:
+        description: |
+          Ubiq client error

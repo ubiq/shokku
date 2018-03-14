@@ -1,0 +1,112 @@
+version: '3.5'
+
+networks:
+  web:
+    external: true
+  back:
+    external: false
+
+services:
+
+  traefik:
+    image: {{docker.registry.local}}/{{docker.projects.traefik.name}}:{{docker.projects.traefik.version}}
+    restart: on-failure
+    networks:
+      - web
+      - back
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    environment:
+      TRAEFIK_DEBUG: "true"
+      TRAEFIK_LOG_LEVEL: "ERROR"
+      TRAEFIK_SWARM_MODE: "false"
+      TRAEFIK_CONSTRAINTS_TAG: "tag==api"
+      S3_BUCKET: "{{s3.bucket}}"
+      S3_PATH: "test/api/traefik"
+
+  api:
+    image: {{docker.registry.local}}/{{docker.projects.api-dev.name}}:{{docker.projects.api-dev.version}}
+    restart: on-failure
+    depends_on:
+      - traefik-gubiq
+    networks:
+      - back
+    volumes:
+      - ../..:/var/www/api
+    environment:
+      NODE_ENV: "development"
+      API_APP_ID: "shokku-api"
+      API_PORT: "3000"
+      API_LOG_LEVEL: "info"
+      API_GUBIQ_MN: "http://traefik-gubiq/mn"
+      API_GUBIQ_TN: "http://traefik-gubiq/tn"
+      API_ENABLE_JWT: "false"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:{{~#each subdomains~}}{{this}}.{{../domain-local}}{{#unless @last}},{{/unless}}{{~/each~}}"
+      - "traefik.port=3000"
+      - "traefik.backend=api"
+      - "traefik.docker.network=shokkuapi_back"
+      - "traefik.tags=api"
+      - "traefik.backend.loadbalancer.method=drr"
+      - "traefik.backend.loadbalancer.stickiness=true"
+      - "traefik.backend.loadbalancer.swarm=false"
+
+  traefik-gubiq:
+    image: {{docker.registry.local}}/{{docker.projects.traefik-gubiq.name}}:{{docker.projects.traefik-gubiq.version}}
+    restart: on-failure
+    depends_on:
+      - gubiq-mn
+      - gubiq-tn
+    networks:
+      - back
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TRAEFIK_DEBUG: "true"
+      TRAEFIK_LOG_LEVEL: "ERROR"
+      TRAEFIK_SWARM_MODE: "false"
+      TRAEFIK_CONSTRAINTS_TAG: "tag==gubiq"
+
+  gubiq-mn:
+    image: {{docker.registry.local}}/{{docker.projects.gubiq.name}}:{{docker.projects.gubiq.version}}
+    restart: on-failure
+    networks:
+      - back
+    environment:
+      GUBIQ_NET: "--testnet"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:traefik-gubiq;Path:/mn"
+      - "traefik.port=8588"
+      - "traefik.backend=gubiq-mn"
+      - "traefik.docker.network=shokkuapi_back"
+      - "traefik.tags=gubiq"
+      - "traefik.backend.loadbalancer.method=drr"
+      - "traefik.backend.loadbalancer.stickiness=true"
+      - "traefik.backend.loadbalancer.swarm=false"
+
+  gubiq-tn:
+    image: {{docker.registry.local}}/{{docker.projects.gubiq.name}}:{{docker.projects.gubiq.version}}
+    restart: on-failure
+    networks:
+      - back
+    environment:
+      GUBIQ_NET: "--testnet"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.default.protocol=http"
+      - "traefik.frontend.rule=Host:traefik-gubiq;Path:/tn"
+      - "traefik.port=8588"
+      - "traefik.backend=gubiq-tn"
+      - "traefik.docker.network=shokkuapi_back"
+      - "traefik.tags=gubiq"
+      - "traefik.backend.loadbalancer.method=drr"
+      - "traefik.backend.loadbalancer.stickiness=true"
+      - "traefik.backend.loadbalancer.swarm=false"

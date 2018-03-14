@@ -1,0 +1,39 @@
+{
+  "name": "@ubiqsmart/sparrow-shokku-provider",
+  "version": "1.0.0",
+  "description": "A JSON RPC provider for Sparrow that uses Shokku as its main source",
+  "author": "@aldoborrero",
+  "license": "Apache License 2.0",
+  "repository": "github:ubiq/shokku",
+  "homepage": "https://github.com/ubiq/shokku#readme",
+  "keywords": [
+    "ethereum",
+    "metamask",
+    "provider",
+    "rpc",
+    "sparrow",
+    "ubiq"
+  ],
+  "main": "dist/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "babel src -d dist",
+    "lint": "eslint .",
+    "test": "tape -r babel-register test/**/*.js"
+  },
+  "dependencies": {
+    "eth-json-rpc-middleware": "^1.5.0",
+    "json-rpc-engine": "^3.4.0",
+    "json-rpc-error": "^2.0.0",
+    "tape": "^4.9.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "eslint": "^4.18.2"
+  }
+}

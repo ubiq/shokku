@@ -1,0 +1,1464 @@
+{
+	"info": {
+		"name": "Shokku API",
+		"_postman_id": "bbc83914-f7f6-779f-42a1-3b728de9933a",
+		"description": "Shokku - An open source scalable blockchain infrastructure for Ubiq, Ethereum and IPFS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "blacklist",
+			"description": "Folder for blacklist",
+			"item": [
+				{
+					"name": "/v1/blacklist",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/v1/blacklist",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"blacklist"
+							]
+						},
+						"description": "Return a blacklist of phishing sites that you can find on https://github.com/ubiq/blacklists/ .\n"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "jsonrpc",
+			"description": "Folder for jsonrpc",
+			"item": [
+				{
+					"name": "methods",
+					"description": "",
+					"item": [
+						{
+							"name": "list",
+							"description": "",
+							"item": [
+								{
+									"name": "web3_clientVersion",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/web3_clientVersion",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"web3_clientVersion"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "net_version",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/net_version",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"net_version"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "net_listening",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/net_listening",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"net_listening"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "net_peerCount",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/net_peerCount",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"net_peerCount"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_protocolVersion",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_protocolVersion",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_protocolVersion"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_syncing",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_syncing",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_syncing"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_mining",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_mining",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_mining"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_hashrate",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_hashrate",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_hashrate"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_gasPrice",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_gasPrice",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_gasPrice"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_accounts",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_accounts",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_accounts"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_blockNumber",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_blockNumber",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_blockNumber"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getBalance",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getBalance?params=[\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\", \"latest\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getBalance"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\", \"latest\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getStorageAt",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getStorageAt?params=[\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\", \"0x0\", \"latest\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getStorageAt"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\", \"0x0\", \"latest\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getTransactionCount",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getTransactionCount?params=[\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\", \"latest\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getTransactionCount"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0x407d73d8a49eeb85d32cf465507dd71d507100c1\", \"latest\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getBlockTransactionCountByHash",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getBlockTransactionCountByHash?params=[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getBlockTransactionCountByHash"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getBlockTransactionCountByNumber",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getBlockTransactionCountByNumber?params=[\"latest\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getBlockTransactionCountByNumber"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"latest\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getUncleCountByBlockHash",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getUncleCountByBlockHash?params=[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getUncleCountByBlockHash"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getUncleCountByBlockNumber",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getUncleCountByBlockNumber?params=[\"0xe8\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getUncleCountByBlockNumber"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xe8\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getCode",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getCode?params=[\"0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b\", \"latest\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getCode"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b\", \"latest\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getBlockByHash",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getBlockByHash?params=[\"0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331\", true]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getBlockByHash"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331\", true]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getBlockByHash",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getBlockByNumber?params=[\"0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331\", true]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getBlockByNumber"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331\", true]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getTransactionByHash",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getTransactionByBlockHashAndIndex?params=[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\", \"0x0\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getTransactionByBlockHashAndIndex"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\", \"0x0\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getTransactionByBlockHashAndIndex",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getTransactionByBlockHashAndIndex?params=[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\", \"0x0\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getTransactionByBlockHashAndIndex"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\", \"0x0\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getTransactionByHash",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getTransactionByHash?params=[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getTransactionByHash"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getTransactionReceipt",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getTransactionReceipt?params=[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getTransactionReceipt"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getTransactionReceipt",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getUncleByBlockHashAndIndex?params=[\"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b\", \"0x0\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getUncleByBlockHashAndIndex"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b\", \"0x0\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getUncleByBlockNumberAndIndex",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getUncleByBlockNumberAndIndex?params=[\"0x29c\", \"0x0\"]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getUncleByBlockNumberAndIndex"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[\"0x29c\", \"0x0\"]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getCompilers",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getCompilers",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getCompilers"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getLogs",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getLogs?params=[{\"topics\":  \"0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b\"}]",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getLogs"
+											],
+											"query": [
+												{
+													"key": "params",
+													"value": "[{\"topics\":  \"0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b\"}]",
+													"equals": true
+												}
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								},
+								{
+									"name": "eth_getWork",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{authorization}}"
+											}
+										],
+										"body": {},
+										"url": {
+											"raw": "{{server}}/v1/jsonrpc/{{network}}/eth_getWork",
+											"host": [
+												"{{server}}"
+											],
+											"path": [
+												"v1",
+												"jsonrpc",
+												"{{network}}",
+												"eth_getWork"
+											]
+										},
+										"description": "\n"
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "/v1/jsonrpc/:network/:method?params={{params}}",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}"
+									}
+								],
+								"body": {},
+								"url": {
+									"raw": "{{server}}/v1/jsonrpc/{{network}}/web3_clientVersion",
+									"host": [
+										"{{server}}"
+									],
+									"path": [
+										"v1",
+										"jsonrpc",
+										"{{network}}",
+										"web3_clientVersion"
+									]
+								},
+								"description": "A request using an \"HTTP GET-compatible\" (non-state-changing) JSON-RPC method. Most Ubiq JSON-RPC methods can be described in this way, since they query the blockchain for various pieces of information. Use the `/jsonrpc/{network}/methods` endpoint to get the list of permitted methods.\n"
+							},
+							"response": []
+						},
+						{
+							"name": "/v1/jsonrpc/:network",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "{{authorization}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 20,\n  \"method\": \"eth_submitHashrate\",\n  \"params\": [\"0x0000000000000000000000000000000000000000000000000000000000100000\", \"0x59daa26581d0acd1fce254fb7e85952f4c09d0915afd33d3886cd914bc7d283c\"]\n}"
+								},
+								"url": {
+									"raw": "{{server}}/v1/jsonrpc/{{network}}",
+									"host": [
+										"{{server}}"
+									],
+									"path": [
+										"v1",
+										"jsonrpc",
+										"{{network}}"
+									]
+								},
+								"description": "A request using an \"HTTP POST-compatible\" (state-changing) JSON-RPC method. Use the `/jsonrpc/{network}/methods` endpoint to get the list of permitted methods. Use the regular Ubiq JSON-RPC format for the POST body.\n"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "/v1/jsonrpc/:network/methods",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/v1/jsonrpc/{{network}}/methods",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"jsonrpc",
+								"{{network}}",
+								"methods"
+							]
+						},
+						"description": "The JSON-RPC methods supported by the `/jsonrpc/{network}/{method}` (GET) and `/jsonrpc/{network}` (POST) endpoints.\n"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ticker",
+			"description": "Folder for ticker",
+			"item": [
+				{
+					"name": "/v1/ticker/symbols",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/v1/ticker/symbols",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"ticker",
+								"symbols"
+							]
+						},
+						"description": "Get a list of supported symbols (currency pairs), including fiat, crypto, and tokens\n"
+					},
+					"response": []
+				},
+				{
+					"name": "/v1/ticker/:symbol",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/v1/ticker/:symbol",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"ticker",
+								":symbol"
+							],
+							"variable": [
+								{
+									"key": "symbol",
+									"value": "{{symbol}}"
+								}
+							]
+						},
+						"description": "Get pricing (ticker) data for various currency pairs (fiat, crypto, and tokens) using data from several exchanges. This endpoint shows the price at the exchange with the most volume for the symbol. Use the `/ticker/symbols` (GET) endpoint for the full list of supported symbols.\n"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "status",
+			"description": "",
+			"item": [
+				{
+					"name": "/v1/status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{authorization}}"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/v1/status",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"v1",
+								"status"
+							]
+						},
+						"description": "\n"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

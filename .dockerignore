@@ -1,0 +1,15 @@
+.git
+.vscode
+.idea
+.docker
+build
+node_modules
+test
+dist
+postman
+assets
+provisioners
+bin
+sparrow
+*.md
+shokku.config.json

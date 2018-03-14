@@ -1,0 +1,167 @@
+version: '3.5'
+
+networks:
+  web:
+    external: true
+  back:
+    driver: overlay
+    external: false
+    ipam:
+      config:
+        - subnet: 172.25.10.0/16
+
+secrets:
+  S3_ACCESS_KEY:
+    external: true
+  S3_ACCESS_SECRET:
+    external: true
+
+services:
+
+  traefik:
+    image: {{docker.registry.remote}}/{{docker.projects.traefik.name}}:{{docker.projects.traefik.version}}
+    networks:
+      - web
+      - back
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      TRAEFIK_DEBUG: "false"
+      TRAEFIK_LOG_LEVEL: "ERROR"
+      TRAEFIK_ENABLE_SSL: "true"
+      TRAEFIK_SWARM_MODE: "true"
+      TRAEFIK_LETS_ENCRYPT: "true"
+      TRAEFIK_LETS_ENCRYPT_ACME_EMAIL: "{{email}}"
+      TRAEFIK_LETS_ENCRYPT_ACME_PATH: "/etc/traefik/acme.json"
+      TRAEFIK_CONSTRAINTS_TAG: "tag==api"
+      S3_BUCKET: "{{s3.bucket}}"
+      S3_PATH: "prod/api/traefik"
+    secrets:
+      - S3_ACCESS_KEY
+      - S3_ACCESS_SECRET
+    deploy:
+      replicas: 1
+      mode: replicated
+      update_config:
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      placement:
+        constraints:
+          - node.role == worker
+
+  api:
+    image: {{docker.registry.remote}}/{{docker.projects.api.name}}:{{docker.projects.api.version}}
+    depends_on:
+      - traefik-gubiq
+    networks:
+      - back
+    environment:
+      NODE_ENV: "production"
+      API_APP_ID: "shokku-api"
+      API_PORT: "3000"
+      API_LOG_LEVEL: "info"
+      API_GUBIQ_MN: "http://traefik-gubiq/mn"
+      API_GUBIQ_TN: "http://traefik-gubiq/tn"
+      API_ENABLE_JWT: "false"
+    deploy:
+      replicas: 1
+      mode: replicated
+      update_config:
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      placement:
+        constraints:
+          - node.role == worker
+      labels:
+        - "traefik.enable=true"
+        - "traefik.default.protocol=http"
+        - "traefik.frontend.rule=Host:{{~#each subdomains~}}{{this}}.{{../domain}}{{#unless @last}},{{/unless}}{{~/each~}}"
+        - "traefik.port=3000"
+        - "traefik.backend=api"
+        - "traefik.docker.network={{docker.swarm.name}}_back"
+        - "traefik.tags=api"
+        - "traefik.backend.loadbalancer.method=drr"
+        - "traefik.backend.loadbalancer.stickiness=true"
+        - "traefik.backend.loadbalancer.swarm=true"
+
+  traefik-gubiq:
+    image: {{docker.registry.remote}}/{{docker.projects.traefik.name}}:{{docker.projects.traefik.version}}
+    depends_on:
+      - gubiq-mn
+      - gubiq-tn
+    networks:
+      - back
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TRAEFIK_DEBUG: "false"
+      TRAEFIK_LOG_LEVEL: "ERROR"
+      TRAEFIK_SWARM_MODE: "true"
+      TRAEFIK_CONSTRAINTS_TAG: "tag==gubiq"
+
+  gubiq-mn:
+    image: {{docker.registry.remote}}/{{docker.projects.gubiq.name}}:{{docker.projects.gubiq.version}}
+    networks:
+      - back
+    environment:
+      GUBIQ_NET: ""
+    deploy:
+      replicas: 1
+      mode: replicated
+      update_config:
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.gubiq == gubiq-mn
+      labels:
+        - "traefik.enable=true"
+        - "traefik.default.protocol=http"
+        - "traefik.frontend.rule=Host:traefik-gubiq;Path:/mn"
+        - "traefik.port=8588"
+        - "traefik.backend=gubiq-mn"
+        - "traefik.docker.network={{docker.swarm.name}}_back"
+        - "traefik.tags=gubiq"
+        - "traefik.backend.loadbalancer.method=drr"
+        - "traefik.backend.loadbalancer.stickiness=true"
+        - "traefik.backend.loadbalancer.swarm=true"
+
+  gubiq-tn:
+    image: {{docker.registry.remote}}/{{docker.projects.gubiq.name}}:{{docker.projects.gubiq.version}}
+    networks:
+      - back
+    environment:
+      GUBIQ_NET: "--testnet"
+    deploy:
+      replicas: 1
+      mode: replicated
+      update_config:
+        delay: 5s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+      placement:
+        constraints:
+          - node.role == worker
+          - node.labels.gubiq == gubiq-tn
+      labels:
+        - "traefik.enable=true"
+        - "traefik.default.protocol=http"
+        - "traefik.frontend.rule=Host:traefik-gubiq;Path:/tn"
+        - "traefik.port=8588"
+        - "traefik.backend=gubiq-tn"
+        - "traefik.docker.network={{docker.swarm.name}}_back"
+        - "traefik.tags=gubiq"
+        - "traefik.backend.loadbalancer.method=drr"
+        - "traefik.backend.loadbalancer.stickiness=true"
+        - "traefik.backend.loadbalancer.swarm=true"
