@@ -66,3 +66,6 @@ build/
 
 # Ignore files written to docker/compose
 docker/compose/
+
+# Ignore coverage files
+coverage.lcov
