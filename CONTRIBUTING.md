@@ -10,7 +10,7 @@ We accept contributions via Pull Requests on [Github](https://github.com/ubiq/sh
 
 - **Coding Standards**: Make sure ESLint doesn't throw any errors. We pretty much follow [what Airbnb says](https://github.com/airbnb/javascript) with a couple of exceptions.
 - **Create feature branches**: It's important to be concise with your commits, so don't ask us to pull from your master branch.
-- **Add tests if applicable**: Your patch probably won't be accepted if it doesn't have tests (will depend on the situation).
+- **Add tests if applicable**: Your patch probably won't be accepted if it doesn't have tests (but will depend on the situation).
 - **Document any change in behaviour**: Make sure the `README.md`, Postman files and any other relevant documentation are kept up-to-date.
 - **Consider our release cycle**: We follow [SemVer v2.0.0](http://semver.org/).
 - **One pull request per feature**: If you want to do more than one thing, send multiple pull requests.

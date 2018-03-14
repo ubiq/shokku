@@ -1,9 +1,3 @@
-<p align="center">
-  <a href="https://babeljs.io/">
-    <img alt="babel" src="https://raw.githubusercontent.com/ubiq/shokku/master/assets/shokku.jgp">
-  </a>
-</p>
-
 <div align="center">
   <p>:zap::zap::zap: An open source scalable blockchain infrastructure for Ubiq, Ethereum and IPFS :zap::zap::zap:</p>
 </div>
@@ -30,21 +24,21 @@
   </h1>
 </div>
 
-**Note**: Until further notice, this project is in heavy development mode (don't expect everything to work out of the box, also the documentation is lacking and more)!
+**Note**: Until further notice, this project is in heavy development mode (don't expect everything to work out of the box, also the documentation is lacking and many more)!
 
 ## Description
 
 Shokku provides you with a complete way of having your own infrastructure for Ubiq and Ethereum (soon) nodes (pretty much like Infura does), exposing them with a nice JSON API, allowing you to have full control on the whole process.
 
-If you want, you can try the live service hosted in [https://api.shokku.com](https://api.shokku.com).
+If you want, you can try the live service hosted in [https://api.shokku.com](https://api.shokku.com) (to be deployed soon).
 
 ## Motivation
 
-If you're asking why the existence of this project, I recommend you to read [this Medium article](https://medium.com/) where I explain the reasoning in more detail.
+If you're asking why the existence of this project, I recommend you to read [this Medium article](https://medium.com/) (to be released soon) where I explain the reasoning in more detail.
 
 ## Development Setup
 
-To be written...
+Please see [DEVELOPMENT](DEVELOPMENT.md) for more information.
 
 ## Deployment
 
@@ -56,6 +50,7 @@ Towards releasing version 1.0.0, there are several tasks that need attention. We
 
 A couple of tasks that would be awesome to have help would be:
 
+- [ ] Configure services like travis, waffle...
 - [ ] Finish properly tests and make lint happy
 - [ ] Finish Docker [DigitalOcean](http://digitalocean.com/) provisioner.
 - [ ] Finish Docker [Vultr](http://vultr.com/) provisioner.
@@ -80,15 +75,15 @@ These are super hero members that have contributed in a meaningful way to the pr
 
 - [ ] Don't be shy and help! You'r name will be here ;)
 
-## Acknowledgements
-
-- Thanks to Pablo ([@ataliano](https://twitter.com/ataliano)) for creating this awesome logo!
-
 ## Donations
 
 Donations are very important to us as it will help to keep this project moving! ❤❤❤
 
 > Ubiq Address: 0x83B07FC91522e64Dac623a49Da5967d433aD1a4B | [View address on ubiqscan](https://ubiqscan.io/address/0x83b07fc91522e64dac623a49da5967d433ad1a4b)
+
+## Acknowledgements
+
+- Thanks to Pablo ([@ataliano](https://twitter.com/ataliano)) for creating this awesome logo!
 
 ## Support
 
