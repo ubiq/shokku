@@ -1283,9 +1283,10 @@ describe('jsonrpc.controller', () => {
         'resp -> 400',
         async () => {
           for (const network of networks) {
-            const url = `/v1/jsonrpc/${network}/eth_call?params=[{"to": "0xb60e8dd61c5d32be8058bb8eb970870f07233155", "invalidkey": "0xb60e8dd61c5d32be8058bb8eb970870f07233155"}, "earliest"]`
+            const url1 = `/v1/jsonrpc/${network}/eth_call?params=`
+            const url2 = '[{"to": "0xb60e8dd61c5d32be8058bb8eb970870f07233155", "invalidkey": "0xb60e8dd61c5d32be8058bb8eb970870f07233155"}, "earliest"]'
             const r = await request(server)
-              .get(url)
+              .get(url1 + url2)
               .expect('Content-Type', /json/)
               .expect(400)
 

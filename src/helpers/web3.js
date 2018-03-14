@@ -469,11 +469,7 @@ const safe = {
       name: 'eth_submitWork',
       call: 'eth_submitWork',
       params: 3,
-      validate: args => {
-        const powHash = args[0]
-        const seedHash = args[1]
-        const boundary = args[2]
-      }
+      validate: () => true
     }),
     new EMethod({
       name: 'eth_submitHashrate',
