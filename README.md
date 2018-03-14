@@ -18,6 +18,15 @@
   <a href="https://david-dm.org/ubiq/shokku?type=dev" target="_blank">
     <img alt="devDependency Status" src="https://david-dm.org/ubiq/shokku/dev-status.svg" />
   </a>
+</div>
+
+<div align="center">
+  <a href="https://waffle.io/ubiq/shokku" target="_blank">
+    <img alt="Waffle.io - Columns and their card count" src="https://badge.waffle.io/ubiq/shokku.svg?columns=all" />
+  </a>
+</div>
+
+<div align="center">
   <h1>
     <img width="100%" heigth="100%" src="https://raw.githubusercontent.com/ubiq/shokku/master/assets/shokku.jpg" alt="shokku-logo">
     <p>Shokku</p>
