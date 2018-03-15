@@ -55,24 +55,24 @@ Please see [DEPLOYMENT](DEPLOYMENT.md) for more details and options.
 
 ## TODO
 
-Towards releasing version 1.0.0, there are several tasks that need attention. We're using Github Issues to track everything, with a sweet flavor of Waffle to have a better overall overview.
+Towards releasing version 1.0.0, there are several tasks that need attention. We're using Waffle.io to track everything.
 
 A couple of tasks that would be awesome to have help would be:
 
-- [ ] Configure services like travis, waffle...
-- [ ] Finish properly tests and make lint happy
+- [x] Configure services like travis, waffle...
+- [ ] Finish properly tests.
+- [ ] Increase code coverage.
 - [ ] Finish Docker [DigitalOcean](http://digitalocean.com/) provisioner.
 - [ ] Finish Docker [Vultr](http://vultr.com/) provisioner.
+- [ ] Add complete support to [IPFS](https://ipfs.io/) nodes.
 - [ ] Provide a better way to backup blockchain data (in case of Gubiq instances) to spin up quickly more instances without downloading the whole blockchain.
 - [ ] Create [Terraform](https://www.terraform.io/) provisioner for setting up a [Kubernetes](https://kubernetes.io/) cluster tailored for Shokku.
 - [ ] Create a set of [Helm](https://helm.sh/) recipes for spining Shokku inside a Kubernetes cluster.
 - [ ] Add support to Ethereum nodes. Improve API to allow having Ubiq and Ethereum options (or to spin one or another depending on needs).
-- [ ] Add complete support to [IPFS](https://ipfs.io/) nodes.
 - [ ] Add rate limiting usage to the API.
 - [ ] Add permissions to use the API with proper JWT sessions (have a better control access).
 - [ ] Improve session API stickiness with [Traefik](https://traefik.io/) (at least for Docker Swarm).
 - [ ] Prepare the code to scale and support heavy load.
-- [ ] Increase code coverage.
 
 ## Contributing
 
