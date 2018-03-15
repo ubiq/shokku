@@ -1,7 +1,10 @@
 import BlacklistService from 'server/services/blacklist'
 
+import l from 'helpers/logger'
+
 export class Controller {
-  async all(req, res) {
+  async blacklist(req, res) {
+    l.info('BlacklistController - all() / Calling blacklist service')
     try {
       const result = await BlacklistService.blacklist()
       return res.json(result)
