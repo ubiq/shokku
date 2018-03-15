@@ -28,10 +28,6 @@
         "name": "traefik",
         "version": "1.0.0"
       },
-      "traefik-gubiq": {
-        "name": "traefik-gubiq",
-        "version": "1.0.0"
-      },
       "gubiq": {
         "name": "gubiq",
         "version": "1.0.0"

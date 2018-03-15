@@ -58,7 +58,7 @@ services:
       - "traefik.backend.loadbalancer.swarm=false"
 
   traefik-gubiq:
-    image: {{docker.registry.local}}/{{docker.projects.traefik-gubiq.name}}:{{docker.projects.traefik-gubiq.version}}
+    image: {{docker.registry.local}}/{{docker.projects.traefik.name}}:{{docker.projects.traefik.version}}
     restart: on-failure
     depends_on:
       - gubiq-mn
