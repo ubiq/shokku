@@ -1,6 +1,6 @@
 {
   "name": "@ubiqsmart/sparrow-shokku-provider",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A JSON RPC provider for Sparrow that uses Shokku as its main source",
   "author": "@aldoborrero",
   "license": "Apache License 2.0",
