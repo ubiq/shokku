@@ -23,7 +23,7 @@ class TickerService {
     l.info(`TickerService - symbols() / Fetching request for current symbol: ${symbol}`)
     try {
       const res = await axios(CRYPTOCOMPARE_API)
-      return this.toTickerJson(symbol, res)
+      return this.toTickerJson(symbol, res.data)
     } catch (err) {
       l.error(`TickerService - symbols() / Error fetching request for current symbol: ${symbol} | ${err}`)
       throw errors.Http502Error({
@@ -32,19 +32,20 @@ class TickerService {
     }
   }
 
-  toTickerJson(symbol, resp) {
+  toTickerJson(symbol, json) {
     l.info('TickerService - symbols() / Converting information to ticker...')
     const currency = symbol.replace('ubq', '').toUpperCase()
-    const json = JSON.parse(resp.data)
     return {
       base: json.RAW.UBQ[currency].FROMSYMBOL,
       quote: json.RAW.UBQ[currency].TOSYMBOL,
       price: json.RAW.UBQ[currency].PRICE,
-      bid: json.RAW.UBQ[currency].BID,
-      ask: json.RAW.UBQ[currency].ASK,
+      open_24h: json.RAW.UBQ[currency].OPEN24HOUR,
+      low_24h: json.RAW.UBQ[currency].LOW24HOUR,
+      exchange: json.RAW.UBQ[currency].LASTMARKET,
+      supply: json.RAW.UBQ[currency].SUPPLY,
+      market_cap: json.RAW.UBQ[currency].MKTCAP,
       last_update: json.RAW.UBQ[currency].LASTUPDATE,
-      total_volume_24h: json.RAW.UBQ[currency].TOTALVOLUME24H,
-      exchange: json.RAW.UBQ[currency].LASTMARKET
+      total_volume_24h: json.RAW.UBQ[currency].TOTALVOLUME24H
     }
   }
 }
