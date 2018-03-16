@@ -1,3 +1,6 @@
+/* eslint-disable func-names */
+/* eslint-disable global-require */
+
 import mocha from 'mocha'
 import chai from 'chai'
 import request from 'supertest'
@@ -8,11 +11,9 @@ const expect = chai.expect
 describe('blacklist.controller', () => {
   let server
 
-  /* eslint-disable func-names */
   before(function (done) {
     this.timeout(15000)
 
-    /* eslint-disable global-require */
     require('../src/app').default.then(s => {
       server = s
       done()
