@@ -4,10 +4,10 @@ import _ from 'lodash'
 if (!_.isAddress) {
   const ethereum = {
     isAddress: address => web3.utils.isAddress(address),
-    isTxHash: hash => /^0x[\da-fA-F]{64}$/i.test(hash),
-    isNonce: nonce => /^0x[\da-fA-F]{16}$/i.test(nonce),
+    isTxHash: hash => /^(?:0x|0X)[\da-f]{64}$/i.test(hash) || /^(?:0x|0X)[\dA-F]{64}$/i.test(hash),
+    isNonce: nonce => /^(?:0x|0X)[\da-f]{16}$/i.test(nonce) || /^(?:0x|0X)[\dA-F]{16}$/i.test(nonce),
     isHex: quantity => web3.utils.isHexStrict(quantity),
-    isBlockTag: tag => tag === 'latest' || tag === 'earliest' || tag === 'pending',
+    isBlockTag: tag => /^latest|earliest|pending$/.test(tag),
     isBlockTagOrHex: quantity => _.isBlockTag(quantity) || _.isHex(quantity)
   }
 
