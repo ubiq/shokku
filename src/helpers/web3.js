@@ -1,8 +1,13 @@
-import Web3 from 'web3'
-import { errors } from 'web3-core-helpers' // eslint-disable-line import/no-extraneous-dependencies
-import Method from 'web3-core-method' // eslint-disable-line import/no-extraneous-dependencies
+/* eslint-disable import/no-extraneous-dependencies */
 
-import Joi from 'joi'
+import Web3 from 'web3'
+import { errors } from 'web3-core-helpers'
+import Method from 'web3-core-method'
+
+import {
+  Joi,
+  Schemas
+} from 'helpers/joi.extended'
 import _ from 'helpers/lodash.mixins'
 
 const web3mn = new Web3(new Web3.providers.HttpProvider(process.env.API_GUBIQ_MN || 'http://localhost:8588'))
@@ -236,17 +241,7 @@ const safe = {
           return false
         }
 
-        const schema = Joi.object().keys({
-          from: Joi.string().regex(/^0x[0-9a-f]{40}$/i),
-          to: Joi.string().regex(/^0x[0-9a-f]{40}$/i).required(),
-          gas: Joi.string().hex(),
-          gasPrice: Joi.string().hex(),
-          value: Joi.string().hex(),
-          data: Joi.string()
-        })
-
-        // Check if this object complies correctly with the format
-        const result = Joi.validate(obj, schema)
+        const result = Joi.validate(obj, Schemas.SendTx)
         if (result.error) {
           return false
         }
@@ -379,27 +374,12 @@ const safe = {
           return false
         }
 
-        const schema = {
-          type: 'object',
-          properties: {
-            fromBlock: {
-              type: 'eth_address'
-            },
-            toBlock: {
-              type: 'eth_quantity'
-            },
-            address: {
-              type: 'eth_quantity'
-            },
-            topics: {
-              type: 'eth_quantity'
-            }
-          }
+        const result = Joi.validate(filterObj, Schemas.Filter)
+        if (result.error) {
+          return false
         }
 
-        const isValidFilterObj = Joi.validate(schema, filterObj)
-
-        return isValidFilterObj
+        return true
       },
       outputFormatter: res => (_.isNull(res) ? [] : res)
     }),
@@ -424,34 +404,8 @@ const safe = {
           return false
         }
 
-        const schema = {
-          type: 'object',
-          properties: {
-            from: {
-              type: 'ethaddress'
-            },
-            to: {
-              type: 'ethquantity'
-            },
-            gas: {
-              type: 'ethquantity'
-            },
-            gasPrice: {
-              type: 'ethquantity'
-            },
-            value: {
-              type: 'ethquantity'
-            },
-            data: {
-              type: 'string'
-            }
-          },
-          required: ['to']
-        }
-
-        // Check if this object complies correctly with the format
-        const isCorrectObj = Joi.validate(schema, obj)
-        if (!isCorrectObj) {
+        const result = Joi.validate(obj, Schemas.Filter)
+        if (result.error) {
           return false
         }
 
