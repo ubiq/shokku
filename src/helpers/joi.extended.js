@@ -1,3 +1,5 @@
+/* eslint-disable import/no-named-default */
+
 import { default as J } from 'joi'
 import _ from 'helpers/lodash.mixins'
 
@@ -37,6 +39,16 @@ const Joi = J.extend({
       }
       return value
     }
+  }, {
+    name: 'isHex',
+    validate(params, value, state, options) {
+      if (!_.isHex(value)) {
+        return this.createError('invalid hexadecimal passed', {
+          v: value
+        }, state, options)
+      }
+      return value
+    }
   }]
 })
 
@@ -51,9 +63,9 @@ const Schemas = {
   SendTx: Joi.object().keys({
     from: Joi.eth().isAddress(),
     to: Joi.eth().isAddress().required(),
-    gas: Joi.string().hex(),
-    gasPrice: Joi.string().hex(),
-    value: Joi.string().hex(),
+    gas: Joi.eth().isHex(),
+    gasPrice: Joi.eth().isHex(),
+    value: Joi.eth().isHex(),
     data: Joi.string()
   })
 }
