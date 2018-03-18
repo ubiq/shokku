@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 import mocha from 'mocha'
 import chai from 'chai'
 import request from 'supertest'
@@ -8,12 +10,8 @@ const expect = chai.expect
 xdescribe('status.controller', () => {
   let server
 
-  before(done => {
-    /* eslint-disable global-require */
-    require('../src/app').default.then(s => {
-      server = s
-      done()
-    }).catch(e => done(new Error('App was not loaded correctly! Error: ', e)))
+  before(async () => {
+    server = await require('../../src/app').default
   })
 
   test('when req -> "/v1/status" | resp -> 200', () => {

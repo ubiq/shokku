@@ -11,13 +11,8 @@ const expect = chai.expect
 describe('blacklist.controller', () => {
   let server
 
-  before(function (done) {
-    this.timeout(15000)
-
-    require('../src/app').default.then(s => {
-      server = s
-      done()
-    }).catch(e => done(e))
+  before(async () => {
+    server = await require('../../src/app').default
   })
 
   test('when req -> /v1/blacklist | resp -> 200', async () => {

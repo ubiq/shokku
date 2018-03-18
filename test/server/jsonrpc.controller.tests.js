@@ -23,37 +23,50 @@ const expectStandardErrorResponse = r => {
   expect(r.body.errors).to.be.a('array')
 }
 
+class Ganacher {
+  constructor() {
+    this.server = Ganache.server({
+      port: 8588,
+      network_id: 88,
+      hdPath: "m/44'/108'/0'/0/",
+      seed: 'shokku',
+      total_accounts: 5,
+      locked: false,
+      db_path: ''
+    })
+  }
+
+  async start() {
+    return new Promise((resolve, reject) => {
+      this.server.listen(err => {
+        if (err) {
+          reject(err)
+        }
+        resolve()
+      })
+    })
+  }
+
+  close() {
+    this.server.close()
+  }
+}
+
 describe('jsonrpc.controller', () => {
   let server
-  let rpcServer
+  let ganacher
 
-  before(function (done) {
-    this.timeout(15000)
-
-    require('../src/app').default.then(s => {
-      server = s
-      if (process.env.API_ENABLE_GANACHE === 'true') {
-        rpcServer = Ganache.server({
-          port: 8588,
-          network_id: 88,
-          hdPath: "m/44'/108'/0'/0/"
-        })
-        rpcServer.listen(err => {
-          if (err) {
-            done(err)
-            return
-          }
-          done()
-        })
-      } else {
-        done()
-      }
-    }).catch(e => done(e))
+  before(async () => {
+    server = await require('../../src/app').default
+    if (process.env.API_ENABLE_GANACHE === 'true') {
+      ganacher = new Ganacher()
+      await ganacher.start()
+    }
   })
 
   after(() => {
-    if (rpcServer) {
-      rpcServer.close()
+    if (ganacher) {
+      ganacher.close()
     }
   })
 

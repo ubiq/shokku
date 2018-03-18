@@ -11,11 +11,8 @@ const expect = chai.expect
 describe('main.controller', () => {
   let server
 
-  before(done => {
-    require('../src/app').default.then(s => {
-      server = s
-      done()
-    }).catch(e => done(e))
+  before(async () => {
+    server = await require('../../src/app').default
   })
 
   test('when req -> / | resp -> 204', async () => {
