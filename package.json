@@ -16,7 +16,7 @@
     "run": "node ./build/main.js | pino -o 'short'",
     "dev": "backpack dev | pino -o 'short'",
     "lint": "eslint .",
-    "test": "nyc --reporter=lcov --reporter=text-summary mocha --recursive --exit --require babel-register",
+    "test": "nyc --reporter=lcov --reporter=text-summary mocha --recursive --exit --require babel-register --timeout 15000",
     "coverage": "nyc report --reporter=text-lcov > coverage.lcov && codecov",
     "report": "nyc report --reporter=lcov --reporter=text",
     "dockerize": "node ./bin/dockerize.js"
