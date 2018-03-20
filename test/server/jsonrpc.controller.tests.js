@@ -983,10 +983,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238] | resp -> 200', async () => {
+        test('params [0xe626531b181a0c8279fe0a03081ed866fc647e4c893403e8d9671a43a6431a8f] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getBlockTransactionCountByHash?params=["0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getBlockTransactionCountByHash?params=["0xe626531b181a0c8279fe0a03081ed866fc647e4c893403e8d9671a43a6431a8f"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -1082,7 +1082,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    xdescribe('eth_getUncleCountByBlockHash', () => {
+    describe('eth_getUncleCountByBlockHash', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getUncleCountByBlockHash', () => {
         test('no params | resp -> 400', async () => {
           for (const network of networks) {
@@ -1117,10 +1117,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238] | resp -> 200', async () => {
+        test('params [0xe626531b181a0c8279fe0a03081ed866fc647e4c893403e8d9671a43a6431a8f] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getUncleCountByBlockHash?params=["0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getUncleCountByBlockHash?params=["0xe626531b181a0c8279fe0a03081ed866fc647e4c893403e8d9671a43a6431a8f"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
