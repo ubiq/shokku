@@ -5,7 +5,10 @@ import mocha from 'mocha'
 import chai from 'chai'
 import request from 'supertest'
 import Ganache from 'ganache-core'
+import Web3 from 'web3'
 import dotenv from 'dotenv'
+import solc from 'solc'
+import fs from 'fs'
 import _ from 'lodash'
 
 dotenv.config({
@@ -23,22 +26,44 @@ const expectStandardErrorResponse = r => {
   expect(r.body.errors).to.be.a('array')
 }
 
+const expectStandardResponse = r => {
+  expect(r.body).to.be.an('object')
+  expect(r.body.id).to.be.a('number')
+  expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+}
+
 class Ganacher {
   constructor() {
-    this.server = Ganache.server({
-      port: process.env.API_GANACHE_PORT || 8588,
+    this.opts = {
       network_id: 88,
       hdPath: "m/44'/108'/0'/0/",
-      seed: 'shokku',
-      total_accounts: 5,
-      locked: false
-    })
-    this.meta = {}
+      nmemonic: 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat',
+      locked: false,
+      gasPrice: '0x4A817C800',
+      accounts: [{
+        address: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
+        secretKey: '0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3',
+        balance: Web3.utils.toWei('100000', 'ether')
+      },
+      {
+        address: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
+        secretKey: '0xf9b2d466cfe82a6e9209bb87dd0de7e63fe893d7625160c9fc663452b52eaa06',
+        balance: Web3.utils.toWei('10000', 'ether')
+      },
+      {
+        address: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef',
+        secretKey: '0x109d8195d7a1b7e00d3538bafc0f23af2c6e6482b8cc780a10264284779a7adb',
+        balance: Web3.utils.toWei('1000', 'ether')
+      }
+      ]
+    }
+    this.server = Ganache.server(this.opts)
+    this.contracts = {}
   }
 
   start() {
     return new Promise((resolve, reject) => {
-      this.server.listen(err => {
+      this.server.listen(process.env.API_GANACHE_PORT || 8588, err => {
         if (err) {
           reject(err)
         }
@@ -49,6 +74,67 @@ class Ganacher {
 
   close() {
     this.server.close()
+  }
+
+  async setupBlockchain() {
+    // Connect to Ganache
+    const domain = `${process.env.API_GANACHE_HOST}:${process.env.API_GANACHE_PORT}`
+    this.web3 = new Web3(new Web3.providers.HttpProvider(domain))
+
+    const accounts = this.opts.accounts
+
+    // Generate fake transactions of money to create at least three blocks
+    const tx1 = {
+      from: accounts[0].address,
+      to: accounts[1].address,
+      value: Web3.utils.toWei('1', 'ether')
+    }
+    await this.web3.eth.sendTransaction(tx1).catch(e => e)
+
+    const tx2 = {
+      from: accounts[2].address,
+      to: accounts[1].address,
+      value: Web3.utils.toWei('50', 'ether')
+    }
+    await this.web3.eth.sendTransaction(tx2).catch(e => e)
+
+    const tx3 = {
+      from: accounts[2].address,
+      to: accounts[0].address,
+      value: Web3.utils.toWei('200', 'ether')
+    }
+    await this.web3.eth.sendTransaction(tx3).catch(e => e)
+
+    // Compile BeerToken smart contract
+    const inputs = {}
+    const contracts = ['BeerToken.sol', 'SafeMath.sol', 'StandardToken.sol', 'ERC20.sol', 'ERC20Basic.sol', 'BasicToken.sol']
+    contracts.forEach(contract => {
+      inputs[contract] = fs.readFileSync(`${__dirname}/contracts/${contract}`, 'utf8')
+    })
+    const out = solc.compile({
+      sources: inputs
+    }, 1)
+
+    const bytecode = out.contracts['BeerToken.sol:BeerToken'].bytecode
+    const abi = JSON.parse(out.contracts['BeerToken.sol:BeerToken'].interface)
+
+    this.opts.contracts = {
+      beer: {
+        bytecode,
+        abi
+      }
+    }
+
+    // Deploy the smart contract to the blockchain
+    await this.web3.eth.sendTransaction({
+      from: accounts[0].address,
+      data: bytecode,
+      gas: '0x47E7C4'
+    })
+  }
+
+  mainAddress() {
+    return this.opts.accounts[0].address
   }
 }
 
@@ -61,6 +147,7 @@ describe('jsonrpc.controller', () => {
     if (process.env.API_ENABLE_GANACHE === 'true') {
       ganacher = new Ganacher()
       await ganacher.start()
+      await ganacher.setupBlockchain()
     }
   })
 
@@ -95,9 +182,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('string')
           }
         })
@@ -109,9 +194,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('string')
           }
         })
@@ -122,6 +205,7 @@ describe('jsonrpc.controller', () => {
               .get(`/v1/jsonrpc/${network}/web3_clientVersion?params=["invalid"]`)
               .expect('Content-Type', /json/)
               .expect(400)
+
             expectStandardErrorResponse(r)
           }
         })
@@ -137,9 +221,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('string')
           }
         })
@@ -151,9 +233,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('string')
           }
         })
@@ -180,9 +260,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('boolean')
           }
         })
@@ -194,9 +272,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('boolean')
           }
         })
@@ -223,9 +299,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('string')
           }
         })
@@ -237,9 +311,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('string')
           }
         })
@@ -266,9 +338,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -280,9 +350,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -309,9 +377,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('string')
           }
         })
@@ -323,9 +389,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('string')
           }
         })
@@ -352,9 +416,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(e => _.isObject(e) || _.isBoolean(e))
           }
         })
@@ -366,9 +428,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(e => _.isObject(e) || _.isBoolean(e))
           }
         })
@@ -395,9 +455,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('boolean')
           }
         })
@@ -409,9 +467,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('boolean')
           }
         })
@@ -438,9 +494,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -452,9 +506,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -481,9 +533,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -495,9 +545,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -524,9 +572,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('array')
           }
         })
@@ -538,9 +584,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('array')
           }
         })
@@ -567,9 +611,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -581,9 +623,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -687,9 +727,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -701,9 +739,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -715,9 +751,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -729,9 +763,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -780,9 +812,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -875,9 +905,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -889,9 +917,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -903,9 +929,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -917,9 +941,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -968,9 +990,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1019,9 +1039,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1033,9 +1051,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1047,9 +1063,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1061,9 +1075,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1112,9 +1124,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string').that.equals('2.0')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1163,9 +1173,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1214,9 +1222,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1228,9 +1234,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1242,9 +1246,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1256,9 +1258,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x') || n === '')
           }
         })
@@ -1312,15 +1312,17 @@ describe('jsonrpc.controller', () => {
         })
 
         test(
-          'params' +
-          '  [{to: 0xb60e8dd61c5d32be8058bb8eb970870f07233155, invalidkey: 0xb60e8dd61c5d32be8058bb8eb970870f07233155}, earliest]  ' +
+          'params ' +
+          '[{to: 0xb60e8dd61c5d32be8058bb8eb970870f07233155, invalidkey: 0xb60e8dd61c5d32be8058bb8eb970870f07233155}, earliest] | ' +
           'resp -> 400',
           async () => {
             for (const network of networks) {
-              const url1 = `/v1/jsonrpc/${network}/eth_call?params=`
-              const url2 = '[{"to": "0xb60e8dd61c5d32be8058bb8eb970870f07233155", "invalidkey": "0xb60e8dd61c5d32be8058bb8eb970870f07233155"}, "earliest"]'
+              const url = [
+                `/v1/jsonrpc/${network}/eth_call?params=`,
+                '[{"to": "0xb60e8dd61c5d32be8058bb8eb970870f07233155", "invalidkey": "0xb60e8dd61c5d32be8058bb8eb970870f07233155"}, "earliest"]'
+              ].join('')
               const r = await request(server)
-                .get(url1 + url2)
+                .get(url)
                 .expect('Content-Type', /json/)
                 .expect(400)
 
@@ -1336,9 +1338,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -1350,9 +1350,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -1364,9 +1362,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
@@ -1395,9 +1391,7 @@ describe('jsonrpc.controller', () => {
                 .expect('Content-Type', /json/)
                 .expect(200)
 
-              expect(r.body).to.be.an('object')
-              expect(r.body.id).to.be.a('number')
-              expect(r.body.jsonrpc).to.be.a('string')
+              expectStandardResponse(r)
               expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
             }
           }
@@ -1458,9 +1452,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('object')
           }
         })
@@ -1472,9 +1464,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('object')
           }
         })
@@ -1512,9 +1502,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1526,9 +1514,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1540,9 +1526,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1554,9 +1538,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1568,9 +1550,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1582,9 +1562,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1600,9 +1578,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1618,9 +1594,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1636,9 +1610,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1654,9 +1626,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1672,9 +1642,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('number')
           }
         })
@@ -1705,9 +1673,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('array')
           }
         })
@@ -1719,9 +1685,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('array')
           }
         })
@@ -1781,9 +1745,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('array')
           }
         })
@@ -1799,9 +1761,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('array')
           }
         })
@@ -1813,9 +1773,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('array')
           }
         })
@@ -1827,9 +1785,7 @@ describe('jsonrpc.controller', () => {
               .expect('Content-Type', /json/)
               .expect(200)
 
-            expect(r.body).to.be.an('object')
-            expect(r.body.id).to.be.a('number')
-            expect(r.body.jsonrpc).to.be.a('string')
+            expectStandardResponse(r)
             expect(r.body.result).to.be.a('array')
           }
         })
