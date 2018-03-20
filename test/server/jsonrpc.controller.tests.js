@@ -641,7 +641,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    xdescribe('eth_getBalance', () => {
+    describe('eth_getBalance', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getBalance', () => {
         test('no params | resp -> 400', async () => {
           for (const network of networks) {
@@ -665,10 +665,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0x407d73d8a49eeb85d32cf465507dd71d507100c1] | resp -> 400', async () => {
+        test('params [0x627306090abaB3A6e1400e9345bC60c78a8BEf57] | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["0x407d73d8a49eeb85d32cf465507dd71d507100c1"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["0x627306090abaB3A6e1400e9345bC60c78a8BEf57"]`)
               .expect('Content-Type', /json/)
               .expect(400)
 
@@ -676,10 +676,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [latest, 0x407d73d8a49eeb85d32cf465507dd71d507100c1] | resp -> 400', async () => {
+        test('params [latest, 0x627306090abaB3A6e1400e9345bC60c78a8BEf57] | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["latest", "0x407d73d8a49eeb85d32cf465507dd71d507100c1"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["latest", "0x627306090abaB3A6e1400e9345bC60c78a8BEf57"]`)
               .expect('Content-Type', /json/)
               .expect(400)
 
@@ -720,51 +720,51 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0x407d73d8a49eeb85d32cf465507dd71d507100c1, latest] | resp -> 200', async () => {
+        test('params [0x627306090abaB3A6e1400e9345bC60c78a8BEf57, earliest] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["0x407d73d8a49eeb85d32cf465507dd71d507100c1", "latest"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["0x627306090abaB3A6e1400e9345bC60c78a8BEf57", "earliest"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
+            expect(r.body.result).to.be.an('string').that.equals('0x152d02c7e14af6800000')
           }
         })
 
-        test('params [0x407d73d8a49eeb85d32cf465507dd71d507100c1, earliest] | resp -> 200', async () => {
+        test('params [0x627306090abaB3A6e1400e9345bC60c78a8BEf57, latest] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["0x407d73d8a49eeb85d32cf465507dd71d507100c1", "earliest"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["0x627306090abaB3A6e1400e9345bC60c78a8BEf57", "latest"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
+            expect(r.body.result).to.be.an('string').that.equals('0x152cf4aec6e8c44e3000')
           }
         })
 
-        test('params [0x407d73d8a49eeb85d32cf465507dd71d507100c1, pending] | resp -> 200', async () => {
+        test('params [0x627306090abaB3A6e1400e9345bC60c78a8BEf57, pending] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["0x407d73d8a49eeb85d32cf465507dd71d507100c1", "pending"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["0x627306090abaB3A6e1400e9345bC60c78a8BEf57", "pending"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
+            expect(r.body.result).to.be.an('string').that.equals('0x152cf4aec6e8c44e3000')
           }
         })
 
-        test('params [0x407d73d8a49eeb85d32cf465507dd71d507100c1, 0x10] | resp -> 200', async () => {
+        test('params [0x627306090abaB3A6e1400e9345bC60c78a8BEf57, 0x2] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["0x407d73d8a49eeb85d32cf465507dd71d507100c1", "0x10"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getBalance?params=["0x627306090abaB3A6e1400e9345bC60c78a8BEf57", "0x2"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
+            expect(r.body.result).to.be.an('string').that.equals('0x152cf4aec6e8c44e3000')
           }
         })
       })
@@ -843,10 +843,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0x407d73d8a49eeb85d32cf465507dd71d507100c1] | resp -> 400', async () => {
+        test('params [0x627306090abaB3A6e1400e9345bC60c78a8BEf57] | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["0x407d73d8a49eeb85d32cf465507dd71d507100c1"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["0x627306090abaB3A6e1400e9345bC60c78a8BEf57"]`)
               .expect('Content-Type', /json/)
               .expect(400)
 
@@ -854,10 +854,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [latest, 0x407d73d8a49eeb85d32cf465507dd71d507100c1] | resp -> 400', async () => {
+        test('params [latest, 0x627306090abaB3A6e1400e9345bC60c78a8BEf57] | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["latest", "0x407d73d8a49eeb85d32cf465507dd71d507100c1"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["latest", "0x627306090abaB3A6e1400e9345bC60c78a8BEf57"]`)
               .expect('Content-Type', /json/)
               .expect(400)
 
@@ -898,10 +898,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0x407d73d8a49eeb85d32cf465507dd71d507100c1, 0x0] | resp -> 200', async () => {
+        test('params [0x627306090abaB3A6e1400e9345bC60c78a8BEf57, 0x0] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["0x407d73d8a49eeb85d32cf465507dd71d507100c1", "0x0"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["0x627306090abaB3A6e1400e9345bC60c78a8BEf57", "0x0"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -910,10 +910,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0x407d73d8a49eeb85d32cf465507dd71d507100c1, latest] | rresp -> 200', async () => {
+        test('params [0x627306090abaB3A6e1400e9345bC60c78a8BEf57, latest] | rresp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["0x407d73d8a49eeb85d32cf465507dd71d507100c1", "latest"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["0x627306090abaB3A6e1400e9345bC60c78a8BEf57", "latest"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -922,10 +922,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0x407d73d8a49eeb85d32cf465507dd71d507100c1, earliest] | resp -> 200', async () => {
+        test('params [0x627306090abaB3A6e1400e9345bC60c78a8BEf57, earliest] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["0x407d73d8a49eeb85d32cf465507dd71d507100c1", "earliest"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["0x627306090abaB3A6e1400e9345bC60c78a8BEf57", "earliest"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -934,10 +934,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0x407d73d8a49eeb85d32cf465507dd71d507100c1, pending] | resp -> 200', async () => {
+        test('params [0x627306090abaB3A6e1400e9345bC60c78a8BEf57, pending] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["0x407d73d8a49eeb85d32cf465507dd71d507100c1", "pending"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionCount?params=["0x627306090abaB3A6e1400e9345bC60c78a8BEf57", "pending"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -1265,7 +1265,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    describe('eth_call', () => {
+    xdescribe('eth_call', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_call', () => {
         test('no params | resp -> 400', async () => {
           for (const network of networks) {
