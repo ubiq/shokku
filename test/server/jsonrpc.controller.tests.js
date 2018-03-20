@@ -534,7 +534,7 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
+            expect(r.body.result).to.be.a('string').that.equals('0x4A817C800')
           }
         })
 
@@ -546,7 +546,7 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
+            expect(r.body.result).to.be.a('string').that.equals('0x4A817C800')
           }
         })
 
