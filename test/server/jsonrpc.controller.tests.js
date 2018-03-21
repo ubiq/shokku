@@ -1667,22 +1667,63 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
+            expect(r.body.result).to.be.a('object')
           }
         })
       })
     })
 
-    xdescribe('eth_getTransactionByBlockHashAndIndex', () => {
+    describe('eth_getTransactionByBlockHashAndIndex', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getTransactionByBlockHashAndIndex', () => {
-        test('no params | resp -> 200', async () => {
+        test('no params | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
               .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockHashAndIndex`)
               .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+      })
+
+      describe('when req -> /v1/jsonrpc/{network}/eth_getTransactionByBlockHashAndIndex', () => {
+        test('params [] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockHashAndIndex?params=[]`)
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+      })
+
+      describe('when req -> /v1/jsonrpc/{network}/eth_getTransactionByBlockHashAndIndex', () => {
+        test('params [invalid] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockHashAndIndex?params=["invalid"]`)
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+      })
+
+      describe('when req -> /v1/jsonrpc/{network}/eth_getTransactionByBlockHashAndIndex', () => {
+        test('params [block hash, 0x0] | resp -> 200', async () => {
+          const txHash = ganacher.latestBlock().hash
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockHashAndIndex?params=["${txHash}", "0x0"]`)
+              .expect('Content-Type', /json/)
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('number')
+            expect(r.body.result).to.be.a('object')
           }
         })
       })

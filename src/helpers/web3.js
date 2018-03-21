@@ -311,7 +311,22 @@ const safe = {
       name: 'eth_getTransactionByBlockHashAndIndex',
       call: 'eth_getTransactionByBlockHashAndIndex',
       params: 2,
-      validate: () => true
+      validate: args => {
+        const txHash = args[0]
+        const isTxHash = _.isTxHash(txHash)
+        if (!isTxHash) {
+          return false
+        }
+
+        const index = args[1]
+        const isIndex = _.isHex(index)
+        if (!isIndex) {
+          return false
+        }
+
+        return true
+      },
+      outputFormatter: res => (_.isNull(res) ? {} : res)
     }),
     new EMethod({
       name: 'eth_getTransactionByBlockNumberAndIndex',
@@ -331,7 +346,8 @@ const safe = {
         }
 
         return true
-      }
+      },
+      outputFormatter: res => (_.isNull(res) ? {} : res)
     }),
     new EMethod({
       name: 'eth_getTransactionReceipt',
