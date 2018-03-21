@@ -1729,17 +1729,89 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    xdescribe('eth_getTransactionByBlockNumberAndIndex', () => {
+    describe('eth_getTransactionByBlockNumberAndIndex', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getTransactionByBlockNumberAndIndex', () => {
-        test('no params | resp -> 200', async () => {
+        test('no params | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
               .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockNumberAndIndex`)
               .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('params [] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockNumberAndIndex?params=[]`)
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('params [invalid] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockNumberAndIndex?params=["invalid"]`)
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        // Ganache doesn't support earliest
+        xtest('params [earliest, 0x0] | resp -> 200', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockNumberAndIndex?params=["earliest", "0x0"]`)
+              .expect('Content-Type', /json/)
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('number')
+          }
+        })
+
+        test('params [pending, 0x0] | resp -> 200', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockNumberAndIndex?params=["pending", "0x0"]`)
+              .expect('Content-Type', /json/)
+              .expect(200)
+
+            expectStandardResponse(r)
+            expect(r.body.result).to.be.an('object')
+            expect(r.body.result.blockNumber).to.be.a('string').that.equals('0x02')
+          }
+        })
+
+        test('params [latest, 0x0] | resp -> 200', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockNumberAndIndex?params=["latest", "0x0"]`)
+              .expect('Content-Type', /json/)
+              .expect(200)
+
+            expectStandardResponse(r)
+            expect(r.body.result).to.be.an('object')
+            expect(r.body.result.blockNumber).to.be.a('string').that.equals('0x02')
+          }
+        })
+
+        test('params [0x2, 0x0] | resp -> 200', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionByBlockNumberAndIndex?params=["0x2", "0x0"]`)
+              .expect('Content-Type', /json/)
+              .expect(200)
+
+            expectStandardResponse(r)
+            expect(r.body.result).to.be.an('object')
+            expect(r.body.result.blockNumber).to.be.a('string').that.equals('0x02')
           }
         })
       })

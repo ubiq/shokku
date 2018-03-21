@@ -333,9 +333,9 @@ const safe = {
       call: 'eth_getTransactionByBlockNumberAndIndex',
       params: 2,
       validate: args => {
-        const txHash = args[0]
-        const isTxHash = _.isTxHash(txHash)
-        if (!isTxHash) {
+        const blockNumber = args[0]
+        const isBlockNumber = _.isBlockTagOrHex(blockNumber)
+        if (!isBlockNumber) {
           return false
         }
 
