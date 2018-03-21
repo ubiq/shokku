@@ -16,6 +16,7 @@ dotenv.config({
 })
 
 const test = mocha.test
+const xtest = mocha.xit
 const expect = chai.expect
 
 const networks = ['mainnet', 'testnet']
@@ -59,6 +60,7 @@ class Ganacher {
     }
     this.server = Ganache.server(this.opts)
     this.contracts = {}
+    this.blocks = {}
   }
 
   start() {
@@ -118,7 +120,7 @@ class Ganacher {
     const bytecode = out.contracts['BeerToken.sol:BeerToken'].bytecode
     const abi = JSON.parse(out.contracts['BeerToken.sol:BeerToken'].interface)
 
-    this.opts.contracts = {
+    this.contracts = {
       beer: {
         bytecode,
         abi
@@ -131,10 +133,18 @@ class Ganacher {
       data: bytecode,
       gas: '0x47E7C4'
     })
+
+    this.blocks = {
+      latest: await this.web3.eth.getBlock('latest')
+    }
   }
 
   mainAddress() {
     return this.opts.accounts[0].address
+  }
+
+  latestBlock() {
+    return this.blocks.latest
   }
 }
 
@@ -1032,10 +1042,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0xe8] | resp -> 200', async () => {
+        test('params [0x2] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getBlockTransactionCountByNumber?params=["0xe8"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getBlockTransactionCountByNumber?params=["0x2"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -1117,10 +1127,12 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0xe626531b181a0c8279fe0a03081ed866fc647e4c893403e8d9671a43a6431a8f] | resp -> 200', async () => {
+        // Ganache doesn't support this method
+        xtest('params [latest block hash] | resp -> 200', async () => {
           for (const network of networks) {
+            const hash = ganacher.latestBlock().hash
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getUncleCountByBlockHash?params=["0xe626531b181a0c8279fe0a03081ed866fc647e4c893403e8d9671a43a6431a8f"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getUncleCountByBlockHash?params=["${hash}"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -1131,6 +1143,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
+    // Ganache doesn't support this method yet
     xdescribe('eth_getUncleCountByBlockNumber', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getUncleCountByBlockNumber', () => {
         test('no params | resp -> 400', async () => {
@@ -1180,7 +1193,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    xdescribe('eth_getCode', () => {
+    describe('eth_getCode', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getCode', () => {
         test('no params | resp -> 400', async () => {
           for (const network of networks) {
@@ -1215,10 +1228,11 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b, earliest] | resp -> 200', async () => {
+        // Ganache doesn't support this method with param earliest (but returns ok)
+        test('params [0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef, earliest] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getCode?params=["0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b", "earliest"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getCode?params=["0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef", "earliest"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -1227,10 +1241,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b, latest] | resp -> 200', async () => {
+        test('params [0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef, latest] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getCode?params=["0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b", "latest"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getCode?params=["0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef", "latest"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -1239,10 +1253,11 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b, pending] | resp -> 200', async () => {
+        // Ganache doesn't support this method with param earliest (but returns ok)
+        test('params [0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef, pending] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getCode?params=["0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b", "pending"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getCode?params=["0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef", "pending"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -1251,10 +1266,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b, 0x2] | resp -> 200', async () => {
+        test('params [0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef, 0x2] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getCode?params=["0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b", "0x2"]`)
+              .get(`/v1/jsonrpc/${network}/eth_getCode?params=["0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef", "0x2"]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -1300,10 +1315,10 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [{to: 0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b}] | resp -> 400', async () => {
+        test('params [{to: 0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef}] | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_call?params=[{"to": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b"}]`)
+              .get(`/v1/jsonrpc/${network}/eth_call?params=[{"to": "0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef"}]`)
               .expect('Content-Type', /json/)
               .expect(400)
 
@@ -1399,7 +1414,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    xdescribe('eth_getBlockByHash', () => {
+    describe('eth_getBlockByHash', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getBlockByHash', () => {
         test('no params | resp -> 400', async () => {
           for (const network of networks) {
@@ -1445,10 +1460,11 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0x8caa96b7468ef0afd04a34e13facbc17e3258f80993f8eff1c229a711d6327ed, true] | resp -> 200', async () => {
+        test('params [latest block hash, true] | resp -> 200', async () => {
+          const blockHash = ganacher.latestBlock().hash
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getBlockByHash?params=["0x8caa96b7468ef0afd04a34e13facbc17e3258f80993f8eff1c229a711d6327ed", true]`)
+              .get(`/v1/jsonrpc/${network}/eth_getBlockByHash?params=["${blockHash}", true]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
@@ -1457,10 +1473,11 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0x8caa96b7468ef0afd04a34e13facbc17e3258f80993f8eff1c229a711d6327ed, false] | resp -> 200', async () => {
+        test('params [latest block hash, false] | resp -> 200', async () => {
+          const blockHash = ganacher.latestBlock().hash
           for (const network of networks) {
             const r = await request(server)
-              .get(`/v1/jsonrpc/${network}/eth_getBlockByHash?params=["0x8caa96b7468ef0afd04a34e13facbc17e3258f80993f8eff1c229a711d6327ed", false]`)
+              .get(`/v1/jsonrpc/${network}/eth_getBlockByHash?params=["${blockHash}", false]`)
               .expect('Content-Type', /json/)
               .expect(200)
 
