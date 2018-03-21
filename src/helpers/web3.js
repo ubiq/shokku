@@ -287,9 +287,9 @@ const safe = {
           return false
         }
 
-        const fullTx = args[1]
-        const isFullTx = _.isBoolean(_.toBoolean(fullTx))
-        if (!isFullTx) {
+        const bool = args[1]
+        const isBoolean = _.isBoolean(_.toBoolean(bool))
+        if (!isBoolean) {
           return false
         }
 

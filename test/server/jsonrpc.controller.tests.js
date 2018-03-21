@@ -65,7 +65,7 @@ class Ganacher {
 
   start() {
     return new Promise((resolve, reject) => {
-      this.server.listen(process.env.API_GANACHE_PORT || 8588, err => {
+      this.server.listen(process.env.API_TESTS_GANACHE_PORT || 8588, err => {
         if (err) {
           reject(err)
         }
@@ -80,7 +80,7 @@ class Ganacher {
 
   async setupBlockchain() {
     // Connect to Ganache
-    const domain = `${process.env.API_GANACHE_HOST}:${process.env.API_GANACHE_PORT}`
+    const domain = `${process.env.API_TESTS_GANACHE_HOST}:${process.env.API_TESTS_GANACHE_PORT}`
     this.web3 = new Web3(new Web3.providers.HttpProvider(domain))
 
     const accounts = this.opts.accounts
@@ -107,30 +107,35 @@ class Ganacher {
     }
     await this.web3.eth.sendTransaction(tx3).catch(e => e)
 
-    // Compile BeerToken smart contract
-    const inputs = {}
-    const contracts = ['BeerToken.sol', 'SafeMath.sol', 'StandardToken.sol', 'ERC20.sol', 'ERC20Basic.sol', 'BasicToken.sol']
-    contracts.forEach(contract => {
-      inputs[contract] = fs.readFileSync(`${__dirname}/contracts/${contract}`, 'utf8')
-    })
-    const out = solc.compile({
-      sources: inputs
-    }, 1)
+    if (process.env.API_TESTS_GANACHE_COMPILE_SC === 'true') {
+      // Compile BeerToken smart contract
+      const inputs = {}
+      const contracts = ['BeerToken.sol', 'SafeMath.sol', 'StandardToken.sol', 'ERC20.sol', 'ERC20Basic.sol', 'BasicToken.sol']
+      contracts.forEach(contract => {
+        inputs[contract] = fs.readFileSync(`${__dirname}/contracts/${contract}`, 'utf8')
+      })
+      const out = solc.compile({
+        sources: inputs
+      }, 1)
 
-    const bytecode = out.contracts['BeerToken.sol:BeerToken'].bytecode
-    const abi = JSON.parse(out.contracts['BeerToken.sol:BeerToken'].interface)
+      const bytecode = out.contracts['BeerToken.sol:BeerToken'].bytecode
+      const abi = JSON.parse(out.contracts['BeerToken.sol:BeerToken'].interface)
 
-    this.contracts = {
-      beer: {
-        bytecode,
-        abi
+      this.contracts = {
+        beer: {
+          bytecode,
+          abi
+        }
       }
+    } else {
+      this.contracts = JSON.parse(fs.readFileSync(`${__dirname}/contracts/beer-precompiled.json`, 'utf8'))
+      this.contracts.beer.bytecode = this.contracts.beer.bytecode.join('')
     }
 
     // Deploy the smart contract to the blockchain
     await this.web3.eth.sendTransaction({
       from: accounts[0].address,
-      data: bytecode,
+      data: this.contracts.beer.bytecode,
       gas: '0x47E7C4'
     })
 
@@ -1488,7 +1493,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    xdescribe('eth_getBlockByNumber', () => {
+    describe('eth_getBlockByNumber', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getBlockByNumber', () => {
         test('no params | resp -> 400', async () => {
           for (const network of networks) {
@@ -1520,7 +1525,8 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('number')
+            expect(r.body.result).to.be.a('object')
+            expect(r.body.result.number).to.be.a('string').that.equals('0x0')
           }
         })
 
@@ -1532,7 +1538,8 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('number')
+            expect(r.body.result).to.be.a('object')
+            expect(r.body.result.number).to.be.a('string').that.equals('0x0')
           }
         })
 
@@ -1544,7 +1551,8 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('number')
+            expect(r.body.result).to.be.a('object')
+            expect(r.body.result.number).to.be.a('string').that.equals('0x2')
           }
         })
 
@@ -1556,7 +1564,8 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('number')
+            expect(r.body.result).to.be.a('object')
+            expect(r.body.result.number).to.be.a('string').that.equals('0x2')
           }
         })
 
@@ -1568,7 +1577,8 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('number')
+            expect(r.body.result).to.be.a('object')
+            expect(r.body.result.number).to.be.a('string').that.equals('0x2')
           }
         })
 
@@ -1580,7 +1590,34 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('number')
+            expect(r.body.result).to.be.a('object')
+            expect(r.body.result.number).to.be.a('string').that.equals('0x2')
+          }
+        })
+
+        test('params [0x2, false] | resp -> 200', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getBlockByNumber?params=["0x2", "false"]`)
+              .expect('Content-Type', /json/)
+              .expect(200)
+
+            expectStandardResponse(r)
+            expect(r.body.result).to.be.a('object')
+            expect(r.body.result.number).to.be.a('string').that.equals('0x2')
+          }
+        })
+
+        test('params [0x2, true] | resp -> 200', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getBlockByNumber?params=["0x2", "true"]`)
+              .expect('Content-Type', /json/)
+              .expect(200)
+
+            expectStandardResponse(r)
+            expect(r.body.result).to.be.a('object')
+            expect(r.body.result.number).to.be.a('string').that.equals('0x2')
           }
         })
       })
