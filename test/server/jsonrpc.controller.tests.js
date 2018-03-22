@@ -2035,6 +2035,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
+    // Ganache doesn't support this method
     xdescribe('eth_getWork', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getWork', () => {
         test('no params | resp -> 200', async () => {
@@ -2045,11 +2046,10 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('array')
           }
         })
 
-        test('params [] | resp -> 200', async () => {
+        test('params [] | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
               .get(`/v1/jsonrpc/${network}/eth_getWork?params=[]`)
@@ -2057,19 +2057,17 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('array')
           }
         })
 
-        test('params [invalid] | resp -> 200', async () => {
+        test('params [invalid] | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
               .get(`/v1/jsonrpc/${network}/eth_getWork?params=["invalid"]`)
               .expect('Content-Type', /json/)
-              .expect(200)
+              .expect(400)
 
-            expectStandardResponse(r)
-            expect(r.body.result).to.be.a('array')
+            expectStandardErrorResponse(r)
           }
         })
       })
