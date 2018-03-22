@@ -380,6 +380,27 @@ const safe = {
       }
     }),
     new EMethod({
+      name: 'eth_getUncleByBlockHashAndIndex',
+      call: 'eth_getUncleByBlockHashAndIndex',
+      params: 2,
+      validate: args => {
+        const txHash = args[0]
+        const isTxHash = _.isTxHash(txHash)
+        if (!isTxHash) {
+          return false
+        }
+
+        const indexPos = args[1]
+        const isIndexPos = _.isHex(indexPos)
+        if (!isIndexPos) {
+          return false
+        }
+
+        return true
+      },
+      outputFormatter: res => (_.isNull(res) ? {} : res)
+    }),
+    new EMethod({
       name: 'eth_getLogs',
       call: 'eth_getLogs',
       params: 1,

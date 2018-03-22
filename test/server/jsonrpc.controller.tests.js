@@ -1867,17 +1867,51 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    xdescribe('eth_getUncleByBlockHashAndIndex', () => {
+    describe('eth_getUncleByBlockHashAndIndex', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getUncleByBlockHashAndIndex', () => {
-        test('no params | resp -> 200', async () => {
+        test('no params | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
               .get(`/v1/jsonrpc/${network}/eth_getUncleByBlockHashAndIndex`)
               .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('params [] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getUncleByBlockHashAndIndex?params=[]`)
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('params [invalid] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getUncleByBlockHashAndIndex?params=["invalid"]`)
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        // Ganache doesn't support this method yet
+        xtest('params [tx hash, 0x0] | resp -> 200', async () => {
+          const hash = ganacher.latestBlock().hash
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getUncleByBlockHashAndIndex?params=["${hash}", "0x0"]`)
+              .expect('Content-Type', /json/)
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('number')
           }
         })
       })
