@@ -406,7 +406,7 @@ const safe = {
       params: 1,
       validate: args => {
         const filterObj = args[0]
-        const isObj = _.isObj(filterObj)
+        const isObj = _.isObject(filterObj)
         if (!isObj) {
           return false
         }

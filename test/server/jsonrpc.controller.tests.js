@@ -1148,8 +1148,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    // Ganache doesn't support this method yet
-    xdescribe('eth_getUncleCountByBlockNumber', () => {
+    describe('eth_getUncleCountByBlockNumber', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getUncleCountByBlockNumber', () => {
         test('no params | resp -> 400', async () => {
           for (const network of networks) {
@@ -1184,7 +1183,8 @@ describe('jsonrpc.controller', () => {
           }
         })
 
-        test('params [0xe8] | resp -> 200', async () => {
+        // Ganache doesn't support this method yet
+        xtest('params [0xe8] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
               .get(`/v1/jsonrpc/${network}/eth_getUncleCountByBlockNumber?params=["0xe8"]`)
@@ -1971,7 +1971,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    xdescribe('eth_getLogs', () => {
+    describe('eth_getLogs', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getLogs', () => {
         test('no params | resp -> 400', async () => {
           for (const network of networks) {
@@ -2006,6 +2006,21 @@ describe('jsonrpc.controller', () => {
           }
         })
 
+        test('params [{topics: [0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b], invalid: "0x0"}] | resp -> 400', async () => {
+          for (const network of networks) {
+            const url = [
+              `/v1/jsonrpc/${network}/eth_getLogs?params=`,
+              '[{"topics": ["0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b"], "invalid": "0x0"}]'
+            ].join('')
+            const r = await request(server)
+              .get(url)
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
         test('params [{topics: [0x000000000000000000000000a94f5374fce5edbc8e2a8697c15331677e6ebf0b]}] | resp -> 200', async () => {
           for (const network of networks) {
             const r = await request(server)
@@ -2014,7 +2029,7 @@ describe('jsonrpc.controller', () => {
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('array')
+            expect(r.body.result).to.be.an('array')
           }
         })
       })
