@@ -1817,17 +1817,51 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    xdescribe('eth_getTransactionReceipt', () => {
+    describe('eth_getTransactionReceipt', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_getTransactionReceipt', () => {
-        test('no params | resp -> 200', async () => {
+        test('no params | resp -> 400', async () => {
           for (const network of networks) {
             const r = await request(server)
               .get(`/v1/jsonrpc/${network}/eth_getTransactionReceipt`)
               .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('params [] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionReceipt?params=[]`)
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('params [invalid] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionReceipt?params=["invalid"]`)
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('params [tx hash] | resp -> 200', async () => {
+          const txHash = ganacher.latestBlock().hash
+          for (const network of networks) {
+            const r = await request(server)
+              .get(`/v1/jsonrpc/${network}/eth_getTransactionReceipt?params=["${txHash}"]`)
+              .expect('Content-Type', /json/)
               .expect(200)
 
             expectStandardResponse(r)
-            expect(r.body.result).to.be.a('number')
+            expect(r.body.result).to.be.a('object')
           }
         })
       })
