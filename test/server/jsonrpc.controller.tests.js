@@ -1285,7 +1285,7 @@ describe('jsonrpc.controller', () => {
       })
     })
 
-    xdescribe('eth_call', () => {
+    describe('eth_call', () => {
       describe('when req -> /v1/jsonrpc/{network}/eth_call', () => {
         test('no params | resp -> 400', async () => {
           for (const network of networks) {
@@ -1386,36 +1386,6 @@ describe('jsonrpc.controller', () => {
             expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
           }
         })
-
-        test(
-          'params' +
-          '[{' +
-          'from: 0xb60e8dd61c5d32be8058bb8eb970870f07233155, ' +
-          'to: 0xb60e8dd61c5d32be8058bb8eb970870f07233155, ' +
-          'data: 0xbeabacc80000000000000000000000008a7784D22eeD131953D0B95f32Adf092A0C0A571000000000000000000000000145e99f7bc840f3ea42d9a64221f041f9955dca2' +
-          '}, pending] ' +
-          '| resp -> 200 ',
-          async () => {
-            for (const network of networks) {
-              const url = [
-                `/v1/jsonrpc/${network}/eth_call?params=`,
-                '[{',
-                '"from":"0xb60e8dd61c5d32be8058bb8eb970870f07233155",',
-                '"to":"0xb60e8dd61c5d32be8058bb8eb970870f07233155",',
-                '"data":"0xbeabacc80000000000000000000000008a7784D22eeD131953D0B95f32Adf092A0C0A5',
-                '71000000000000000000000000145e99f7bc840f3ea42d9a64221f041f9955dca2"',
-                '}, "pending"]'
-              ].join('')
-              const r = await request(server)
-                .get(url)
-                .expect('Content-Type', /json/)
-                .expect(200)
-
-              expectStandardResponse(r)
-              expect(r.body.result).to.satisfy(n => _.isNumber(n) || _.startsWith(n, '0x'))
-            }
-          }
-        )
       })
     })
 
