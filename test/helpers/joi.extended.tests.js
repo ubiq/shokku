@@ -10,19 +10,19 @@ const expect = chai.expect
 
 describe('joi.extended', () => {
   describe('ethereum address validations', () => {
-    it('should validate properly a correct ethereum address', () => {
+    it('validates a correct ethereum address', () => {
       const schema = Joi.eth().isAddress()
       const result = Joi.validate('0x407d73d8a49eeb85d32cf465507dd71d507100c1', schema)
       expect(result.error).to.be.null
     })
 
-    it('should throw error with an incorrect ethereum address', () => {
+    it('throws an error with an incorrect ethereum address', () => {
       const schema = Joi.eth().isAddress()
       const result = Joi.validate('0x407d73d', schema)
       expect(result.error).to.not.be.null
     })
 
-    it('should throw error with an empty ethereum address', () => {
+    it('throws an error with an empty ethereum address', () => {
       const schema = Joi.eth().isAddress()
       const result = Joi.validate('', schema)
       expect(result.error).to.not.be.null
@@ -30,19 +30,19 @@ describe('joi.extended', () => {
   })
 
   describe('ethereum block tx hash validations', () => {
-    it('should validate properly a correct tx hash', () => {
+    it('validates properly a correct tx hash', () => {
       const schema = Joi.eth().isTxHash()
       const result = Joi.validate('0xb903239f8543d04b5dc1ba6579132b143087c68db1b2168786408fcbce568238', schema)
       expect(result.error).to.be.null
     })
 
-    it('should throw error with an incorrect ethereum tx hash', () => {
+    it('throws an error with an incorrect ethereum tx hash', () => {
       const schema = Joi.eth().isTxHash()
       const result = Joi.validate('0x407d73d', schema)
       expect(result.error).to.not.be.null
     })
 
-    it('should throw error with an empty ethereum tx hash', () => {
+    it('throws an error with an empty ethereum tx hash', () => {
       const schema = Joi.eth().isTxHash()
       const result = Joi.validate('', schema)
       expect(result.error).to.not.be.null
@@ -50,37 +50,37 @@ describe('joi.extended', () => {
   })
 
   describe('ethereum block tag or hex validations', () => {
-    it('should validate properly a correct block tag: "latest"', () => {
+    it('validates properly a correct block tag: "latest"', () => {
       const schema = Joi.eth().isBlockTagOrHex()
       const result = Joi.validate('latest', schema)
       expect(result.error).to.be.null
     })
 
-    it('should validate properly a correct block tag: "pending"', () => {
+    it('validates properly a correct block tag: "pending"', () => {
       const schema = Joi.eth().isBlockTagOrHex()
       const result = Joi.validate('pending', schema)
       expect(result.error).to.be.null
     })
 
-    it('should validate properly a correct block tag: "earliest"', () => {
+    it('validates properly a correct block tag: "earliest"', () => {
       const schema = Joi.eth().isBlockTagOrHex()
       const result = Joi.validate('earliest', schema)
       expect(result.error).to.be.null
     })
 
-    it('should validate properly a correct block tag: "0x1"', () => {
+    it('validates properly a correct block tag: "0x1"', () => {
       const schema = Joi.eth().isBlockTagOrHex()
       const result = Joi.validate('0x1', schema)
       expect(result.error).to.be.null
     })
 
-    it('should validate properly a correct block tag: "0x1121afa"', () => {
+    it('validates properly a correct block tag: "0x1121afa"', () => {
       const schema = Joi.eth().isBlockTagOrHex()
       const result = Joi.validate('0x1121afa', schema)
       expect(result.error).to.be.null
     })
 
-    it('should throw error with an empty block tag', () => {
+    it('throws an error with an empty block tag', () => {
       const schema = Joi.eth().isTxHash()
       const result = Joi.validate('', schema)
       expect(result.error).to.not.be.null
@@ -89,7 +89,7 @@ describe('joi.extended', () => {
 
   describe('ethereum schemas validations', () => {
     describe('Filter', () => {
-      it('should validate properly a correct filter object', () => {
+      it('validates properly a correct filter object', () => {
         const schema = Schemas.Filter
         const filter = {
           fromBlock: 'earliest',
@@ -104,7 +104,7 @@ describe('joi.extended', () => {
         expect(result.error).to.be.null
       })
 
-      it('should validate properly a correct filter object with optional params: fromBlock', () => {
+      it('validates properly a correct filter object with optional params: fromBlock', () => {
         const schema = Schemas.Filter
         const filter = {
           fromBlock: 'earliest'
@@ -113,7 +113,7 @@ describe('joi.extended', () => {
         expect(result.error).to.be.null
       })
 
-      it('should validate properly a correct filter object with optional params: toBlock', () => {
+      it('validates properly a correct filter object with optional params: toBlock', () => {
         const schema = Schemas.Filter
         const filter = {
           toBlock: 'earliest'
@@ -122,7 +122,7 @@ describe('joi.extended', () => {
         expect(result.error).to.be.null
       })
 
-      it('should validate properly a correct filter object with optional params: toBlock', () => {
+      it('validates properly a correct filter object with optional params: toBlock', () => {
         const schema = Schemas.Filter
         const filter = {
           address: '0x8888f1f195afa192cfee860698584c030f4c9db1'
@@ -131,7 +131,7 @@ describe('joi.extended', () => {
         expect(result.error).to.be.null
       })
 
-      it('should validate properly a correct filter object with optional params: topics', () => {
+      it('validates properly a correct filter object with optional params: topics', () => {
         const schema = Schemas.Filter
 
         const filters = []
@@ -158,7 +158,7 @@ describe('joi.extended', () => {
         })
       })
 
-      it('should not validate an incorrect filter object', () => {
+      it('does not validate an incorrect filter object', () => {
         const schema = Schemas.Filter
         const filters = []
         filters.push({
@@ -181,7 +181,7 @@ describe('joi.extended', () => {
     })
 
     describe('SendTx', () => {
-      it('should validate correctly a send tx object', () => {
+      it('validates correctly a send tx object', () => {
         const schema = Schemas.SendTx
         const sendTx = {
           from: '0x8888f1f195afa192cfee860698584c030f4c9db1',
@@ -195,7 +195,7 @@ describe('joi.extended', () => {
         expect(result.error).to.be.null
       })
 
-      it('should validate correctly a send tx object with only required parameters', () => {
+      it('validates correctly a send tx object with only required parameters', () => {
         const schema = Schemas.SendTx
         const sendTx = {
           to: '0x8888f1f195afa192cfee860698584c030f4c9db1'
@@ -204,7 +204,7 @@ describe('joi.extended', () => {
         expect(result.error).to.be.null
       })
 
-      it('should not validate a send tx object without having required parameters', () => {
+      it('does not validate a send tx object without having required parameters', () => {
         const schema = Schemas.SendTx
         const sendTx = {
           from: '0x8888f1f195afa192cfee860698584c030f4c9db1'
