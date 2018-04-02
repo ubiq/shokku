@@ -10,19 +10,19 @@ import _ from 'lodash'
 import cors from 'cors'
 import subdomain from 'express-subdomain'
 
-import osprey from 'helpers/osprey.extended'
-import { jwtOpts } from 'helpers/jwt'
-import errorHandler from 'server/middlewares/error.middleware'
-import l from 'helpers/logger'
+import osprey from '@/helpers/osprey.extended'
+import { jwtOpts } from '@/helpers/jwt'
+import errorHandler from '@/server/middlewares/error.middleware'
+import l from '@/helpers/logger'
 
 import {
   jsonRpcRoutes,
   subdomainJsonRpcRoutes
-} from 'server/routers/jsonrpc'
-import tickerRoutes from 'server/routers/ticker'
-import blacklistRoutes from 'server/routers/blacklist'
-import statusRoutes from 'server/routers/status'
-import mainRoutes from 'server/routers/main'
+} from '@/server/routers/jsonrpc'
+import tickerRoutes from '@/server/routers/ticker'
+import blacklistRoutes from '@/server/routers/blacklist'
+import statusRoutes from '@/server/routers/status'
+import mainRoutes from '@/server/routers/main'
 
 export default class Server {
   constructor(opts = {

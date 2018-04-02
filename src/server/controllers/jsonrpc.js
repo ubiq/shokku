@@ -1,8 +1,8 @@
 import _ from 'lodash'
 import errors from 'common-errors'
 
-import JsonRpcService from 'server/services/jsonrpc'
-import l from 'helpers/logger'
+import JsonRpcService from '@/server/services/jsonrpc'
+import l from '@/helpers/logger'
 
 export class Controller {
   async networks(req, res) {

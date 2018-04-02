@@ -14,7 +14,9 @@
   "plugins": [
     ["module-resolver", {
       "root": ["./src"],
-      "alias": {}
+      "alias": {
+        "@": "./src"
+      }
     }],
     ["extensible-destructuring"]
   ]

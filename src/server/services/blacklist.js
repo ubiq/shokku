@@ -1,7 +1,7 @@
 import axios from 'axios'
 import errors from 'common-errors'
 
-import l from 'helpers/logger'
+import l from '@/helpers/logger'
 
 const BLACKLIST_RESOURCE_URL = process.env.API_BLACKLIST_RESOURCE_URL || 'https://raw.githubusercontent.com/ubiq/blacklists/master/domains.json'
 

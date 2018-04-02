@@ -1,5 +1,5 @@
-import StatusService from 'server/services/status'
-import l from 'helpers/logger'
+import StatusService from '@/server/services/status'
+import l from '@/helpers/logger'
 
 export class Controller {
   async status(req, res) {

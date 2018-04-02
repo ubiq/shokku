@@ -1,4 +1,4 @@
-import controller from 'server/controllers/ticker'
+import controller from '@/server/controllers/ticker'
 
 export default router => router
   .get('/ticker/symbols', controller.symbols)

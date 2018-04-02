@@ -1,6 +1,6 @@
-import BlacklistService from 'server/services/blacklist'
+import BlacklistService from '@/server/services/blacklist'
 
-import l from 'helpers/logger'
+import l from '@/helpers/logger'
 
 export class Controller {
   async blacklist(req, res) {

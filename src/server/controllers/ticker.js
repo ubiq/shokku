@@ -1,5 +1,5 @@
-import TickerService from 'server/services/ticker'
-import l from 'helpers/logger'
+import TickerService from '@/server/services/ticker'
+import l from '@/helpers/logger'
 
 export class TickerController {
   async symbols(req, res) {

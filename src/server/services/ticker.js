@@ -1,7 +1,7 @@
 import axios from 'axios'
 import errors from 'common-errors'
 
-import l from 'helpers/logger'
+import l from '@/helpers/logger'
 
 const CRYPTOCOMPARE_API = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms=UBQ&tsyms=BTC,USD,EUR,ETH,LTC'
 

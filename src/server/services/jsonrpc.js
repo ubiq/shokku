@@ -1,7 +1,7 @@
 import errors from 'common-errors'
 
-import web3 from 'helpers/web3'
-import l from 'helpers/logger'
+import web3 from '@/helpers/web3'
+import l from '@/helpers/logger'
 
 class JsonRpcService {
   async networks() {

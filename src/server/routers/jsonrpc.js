@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import controller from 'server/controllers/jsonrpc'
+import controller from '@/server/controllers/jsonrpc'
 
 export function jsonRpcRoutes(router) {
   router
