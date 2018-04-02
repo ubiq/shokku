@@ -69,3 +69,8 @@ docker/compose/
 
 # Ignore coverage files
 coverage.lcov
+
+# Intellij
+.idea/
+*.iml
+*.iws
