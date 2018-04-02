@@ -1,6 +1,6 @@
 import errors from 'common-errors'
 
-import web3 from '@/helpers/web3'
+import web3 from '@/helpers/web3.shokku'
 import l from '@/helpers/logger'
 
 class JsonRpcService {
