@@ -1,11 +1,8 @@
 /* eslint-disable global-require */
 
-import mocha from 'mocha'
-import chai from 'chai'
+import { test, before } from 'mocha'
+import { expect } from 'chai'
 import request from 'supertest'
-
-const test = mocha.test
-const expect = chai.expect
 
 xdescribe('status.controller', () => {
   let server

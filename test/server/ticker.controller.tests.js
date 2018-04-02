@@ -1,11 +1,8 @@
 /* eslint-disable global-require */
 
-import mocha from 'mocha'
-import chai from 'chai'
+import { describe, before, test } from 'mocha'
+import { expect } from 'chai'
 import request from 'supertest'
-
-const test = mocha.test
-const expect = chai.expect
 
 const expectTickerResponse = r => {
   expect(r.body).to.be.an('object')
