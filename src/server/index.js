@@ -10,7 +10,7 @@ import _ from 'lodash'
 import cors from 'cors'
 import subdomain from 'express-subdomain'
 
-import osprey from 'helpers/osprey'
+import osprey from 'helpers/osprey.extended'
 import { jwtOpts } from 'helpers/jwt'
 import errorHandler from 'server/middlewares/error.middleware'
 import l from 'helpers/logger'

@@ -24,14 +24,30 @@ const osprey = (path, options = {}) => loadRAML(path, {
     middlewares.push(securityMiddleware)
   }
 
-  const serverOpts = _.extend({
-    RAMLVersion: raml.RAMLVersion()
-  }, options.server)
+  const serverOpts = _.extend({ RAMLVersion: raml.RAMLVersion(), notFoundHandler: false }, options.server)
   const serverMiddleware = server(apiRaml, serverOpts)
   middlewares.push(serverMiddleware)
 
-  const errorMiddleware = errorHandler(options.errorHandler)
+  const errorMiddleware = errorHandler((req, res, errors) => {
+    res.json({
+      code: res.statusCode,
+      message: 'Invalid arguments passed to request',
+      extra: errors
+    })
+  })
   middlewares.push(errorMiddleware)
+
+  const notFoundHandler = (req, res, next) => {
+    if (req.resourcePath) {
+      return next()
+    }
+
+    return res.status(404).json({
+      code: 404,
+      message: 'Invalid URL requested'
+    })
+  }
+  middlewares.push(notFoundHandler)
 
   const app = compose(middlewares)
   app.ramlUriParameters = serverMiddleware.ramlUriParameters

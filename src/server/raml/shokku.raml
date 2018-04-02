@@ -40,9 +40,17 @@ types:
   RPCRequest:
     type: object
     properties:
-      jsonrpc: string
-      id: integer
-      method: string
+      jsonrpc:
+        type: string
+        required: true
+        enum:
+          - "2.0"
+      id:
+        type: integer
+        required: true
+      method:
+        type: string
+        required: true
       params: array
 
   RPCResponse:

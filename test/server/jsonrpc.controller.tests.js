@@ -1,8 +1,8 @@
 /* eslint-disable func-names */
 /* eslint-disable global-require */
 
-import mocha from 'mocha'
-import chai from 'chai'
+import { describe, before, test, xit } from 'mocha'
+import { expect } from 'chai'
 import request from 'supertest'
 import Ganache from 'ganache-core'
 import Web3 from 'web3'
@@ -15,16 +15,20 @@ dotenv.config({
   path: `${__dirname}/../.env.tests`
 })
 
-const test = mocha.test
-const xtest = mocha.xit
-const expect = chai.expect
+const xtest = xit
 
 const networks = ['mainnet', 'testnet']
 
 const expectStandardErrorResponse = r => {
   expect(r.body).to.be.an('object')
   expect(r.body.code).to.be.a('number').that.equal(400)
-  expect(r.body.errors).to.be.a('array')
+  expect(r.body.message).to.be.a('string')
+}
+
+const expectStandardErrorNotFoundResponse = r => {
+  expect(r.body).to.be.an('object')
+  expect(r.body.code).to.be.a('number').that.equal(404)
+  expect(r.body.message).to.be.a('string').that.equals('Invalid URL requested')
 }
 
 const expectStandardResponse = r => {
@@ -2044,21 +2048,219 @@ describe('jsonrpc.controller', () => {
     })
   })
 
-  xdescribe('rpc POST calls', () => {
+  describe('rpc POST calls', () => {
     describe('eth_sendRawTransaction', () => {
-      describe('when req -> /v1/jsonrpc/{network}/eth_sendRawTransaction', () => {})
+      describe('when req -> /v1/jsonrpc/{network}/eth_sendRawTransaction', () => {
+        test('no params | resp -> 404', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}/eth_sendRawTransaction`)
+              .expect('Content-Type', /json/)
+              .expect(404)
+
+            expectStandardErrorNotFoundResponse(r)
+          }
+        })
+      })
+
+      describe('when req -> /v1/jsonrpc/{network}/ | body: eth_sendRawTransaction', () => {
+        test('body [method] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}/`)
+              .send({
+                method: 'eth_sendRawTransaction'
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('body [id, method] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}`)
+              .send({
+                id: 1,
+                method: 'eth_sendRawTransaction'
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('body [id, jsonrpc, method] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}`)
+              .send({
+                id: 1,
+                jsonrpc: '2.0',
+                method: 'eth_sendRawTransaction'
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('body [id, jsonrpc, method, no params] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}`)
+              .send({
+                id: 1,
+                jsonrpc: '2.0',
+                method: 'eth_sendRawTransaction',
+                params: []
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+      })
     })
 
     describe('eth_estimateGas', () => {
-      describe('when req -> /v1/jsonrpc/{network}/eth_estimateGas', () => {})
+      describe('when req -> /v1/jsonrpc/{network}/eth_estimateGas', () => {
+        test('no params | resp -> 404', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}/eth_estimateGas`)
+              .expect('Content-Type', /json/)
+              .expect(404)
+            expectStandardErrorNotFoundResponse(r)
+          }
+        })
+      })
+
+      describe('when req -> /v1/jsonrpc/{network}/ | body: eth_estimateGas', () => {
+        test('body [method] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}/`)
+              .send({
+                method: 'eth_estimateGas'
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('body [id, method] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}`)
+              .send({
+                id: 1,
+                method: 'eth_estimateGas'
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+      })
     })
 
     describe('eth_submitWork', () => {
-      describe('when req -> /v1/jsonrpc/{network}/eth_submitWork', () => {})
+      describe('when req -> /v1/jsonrpc/{network}/eth_submitWork', () => {
+        test('no params | resp -> 404', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}/eth_submitWork`)
+              .expect('Content-Type', /json/)
+              .expect(404)
+            expectStandardErrorNotFoundResponse(r)
+          }
+        })
+
+        describe('when req -> /v1/jsonrpc/{network}/ | body: eth_submitWork', () => {
+          test('body [method] | resp -> 400', async () => {
+            for (const network of networks) {
+              const r = await request(server)
+                .post(`/v1/jsonrpc/${network}/`)
+                .send({
+                  method: 'eth_submitWork'
+                })
+                .expect('Content-Type', /json/)
+                .expect(400)
+
+              expectStandardErrorResponse(r)
+            }
+          })
+
+          test('body [id, method] | resp -> 400', async () => {
+            for (const network of networks) {
+              const r = await request(server)
+                .post(`/v1/jsonrpc/${network}`)
+                .send({
+                  id: 1,
+                  method: 'eth_submitWork'
+                })
+                .expect('Content-Type', /json/)
+                .expect(400)
+
+              expectStandardErrorResponse(r)
+            }
+          })
+        })
+      })
     })
 
     describe('eth_submitHashrate', () => {
-      describe('when req -> /v1/jsonrpc/{network}/eth_submitHashrate', () => {})
+      describe('when req -> /v1/jsonrpc/{network}/eth_submitHashrate', () => {
+        test('no params | resp -> 404', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}/eth_submitHashrate`)
+              .expect('Content-Type', /json/)
+              .expect(404)
+
+            expectStandardErrorNotFoundResponse(r)
+          }
+        })
+      })
+
+      describe('when req -> /v1/jsonrpc/{network}/ | body: eth_submitHashrate', () => {
+        test('body [method] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}/`)
+              .send({
+                method: 'eth_submitHashrate'
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+
+        test('body [id, method] | resp -> 400', async () => {
+          for (const network of networks) {
+            const r = await request(server)
+              .post(`/v1/jsonrpc/${network}`)
+              .send({
+                id: 1,
+                method: 'eth_submitHashrate'
+              })
+              .expect('Content-Type', /json/)
+              .expect(400)
+
+            expectStandardErrorResponse(r)
+          }
+        })
+      })
     })
   })
 })

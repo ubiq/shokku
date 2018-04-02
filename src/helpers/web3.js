@@ -426,8 +426,7 @@ const safe = {
       params: 1,
       validate: args => {
         const txHash = args[0]
-        const isTxHash = _.isTxHash(txHash)
-        return isTxHash
+        return _.isTxHash(txHash)
       }
     }),
     new EMethod({
@@ -460,7 +459,27 @@ const safe = {
       name: 'eth_submitWork',
       call: 'eth_submitWork',
       params: 3,
-      validate: () => true
+      validate: args => {
+        const nonce = args[0]
+        const isNonce = _.isNonce(nonce)
+        if (!isNonce) {
+          return false
+        }
+
+        const headerHash = args[1]
+        const isHeaderHash = _.isTxHash(headerHash)
+        if (!isHeaderHash) {
+          return false
+        }
+
+        const mixDigest = args[2]
+        const isMixDigest = _.isTxHash(mixDigest)
+        if (!isMixDigest) {
+          return false
+        }
+
+        return true
+      }
     }),
     new EMethod({
       name: 'eth_submitHashrate',

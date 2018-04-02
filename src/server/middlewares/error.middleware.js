@@ -6,7 +6,7 @@ export default (opts = {}, callback) => (req, res, next) => {
     message: ''
   }, opts)
 
-  const buildErrors = (err, recursive) => {
+  const buildErrors = err => {
     let error
 
     if (_.isString(err)) {
@@ -27,10 +27,6 @@ export default (opts = {}, callback) => (req, res, next) => {
       })
     }
 
-    if (!_.isArray(error) && !recursive) {
-      error = [error]
-    }
-
     return error
   }
 
@@ -40,7 +36,7 @@ export default (opts = {}, callback) => (req, res, next) => {
 
     res.status(code).json({
       code,
-      errors
+      message: ((errors.length === 1) ? _.first(errors).message : errors.message)
     })
 
     if (_.isFunction(callback)) {

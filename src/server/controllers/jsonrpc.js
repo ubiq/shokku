@@ -6,16 +6,20 @@ import l from 'helpers/logger'
 
 export class Controller {
   async networks(req, res) {
+    l.info('JsonRpcController - networks() / Obtaining list of available networks')
     const result = await JsonRpcService.networks()
     return res.json(result)
   }
 
   async methods(req, res) {
+    l.info('JsonRpcController - networks() / Obtaining list of available RPC methods')
     const result = await JsonRpcService.methods()
     return res.json(result)
   }
 
   async method(req, res) {
+    l.info('JsonRpcController - networks() / Handling concrete RPC')
+
     const method = req.method
     const opts = {
       network: req.params && req.params.network === 'mainnet' ? 'mn' : 'tn',
