@@ -57,13 +57,7 @@ resource "scaleway_server" "host" {
   provisioner "remote-exec" {
     inline = [
       "apt update",
-      "apt install -yq apt-transport-https ufw ${join(" ", var.apt_packages)}",
-      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -",
-      "apt install -y apt-transport-https software-properties-common python-software-properties",
-      "add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\"",
-      "apt update -y",
-      "apt install -y docker-ce",
-      "apt autoremove -y"
+      "apt install -yq apt-transport-https ufw ${join(" ", var.apt_packages)}"
     ]
   }
 }

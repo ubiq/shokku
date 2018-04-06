@@ -1,8 +1,7 @@
 #!/bin/sh
 set -e
 
-kubeadm init --config /tmp/master-configuration.yml \
-  --ignore-preflight-errors=Swap
+kubeadm init --config /tmp/master-configuration.yml --ignore-preflight-errors=Swap
 
 kubeadm token create ${token}
 
