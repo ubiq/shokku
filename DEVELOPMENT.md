@@ -1,6 +1,6 @@
 # Development
 
-So, you're interested in developing Shokku... nice! Then just read this guide and you'll be up and running with a dev environment in 5 minutes or less! 
+So, you're interested in developing Shokku... nice! Then just read this guide and you'll be up and running with a dev environment in 5 minutes or less!
 
 ## Directory structure
 
@@ -65,13 +65,13 @@ After modifying that value to your desire, is recommended to to edit the `/etc/h
 After you have modified the values at your will you can run `dockerize.js` script like this:
 
 ```bash
-$ npm run dockerize -- generate
+$ npm run dockerize --generate
 ```
 
 The templates are rendered and saved in `docker/compose` folder. Now, with those templates rendered you have to generate docker images:
 
 ```bash
-$ npm run dockerize -- build local
+$ npm run dockerize --build local
 ```
 
 And with the last step finished, you can use docker as usally:
@@ -79,6 +79,10 @@ And with the last step finished, you can use docker as usally:
 ```bash
 $ docker-compose -f docker/compose/docker-compose-yaml up
 ```
+
+If you get error command not found: docker-compose you need to install it for you OS.
+[`docker-compose`](https://docs.docker.com/compose/install/#prerequisites)
+
 
 Voila! You can open your browser and navigate your domain (or use Postman) to test the API!
 
