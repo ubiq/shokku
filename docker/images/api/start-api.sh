@@ -1,4 +1,5 @@
 #!/bin/sh -e
 
 cd /var/www/api
-npm run start
+yarn run prestart:prod
+yarn run start:prod

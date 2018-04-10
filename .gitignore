@@ -64,8 +64,8 @@ build/
 .idea
 .vscode
 
-# Ignore files written to docker/compose
-docker/compose/
+# Ignore files written from templates
+out
 
 # Ignore coverage files
 coverage.lcov

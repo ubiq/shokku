@@ -33,7 +33,8 @@ RUN chmod +x /usr/local/bin/start-api.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Install api dependencies
-RUN npm install
+RUN npm install --global yarn
+RUN yarn install
 
 EXPOSE 3000
 
