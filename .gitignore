@@ -20,12 +20,6 @@ coverage
 # nyc test coverage
 .nyc_output
 
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
-# Bower dependency directory (https://bower.io/)
-bower_components
-
 # node-waf configuration
 .lock-wscript
 
@@ -57,20 +51,19 @@ typings/
 # dotenv environment variables file
 # .env
 
-# build files
+# build and dist files
 build/
-
-# Ignore IDEs
-.idea
-.vscode
+dist/
 
 # Ignore files written from templates
 out
 
-# Ignore coverage files
-coverage.lcov
-
-# Intellij
+# Ignore IDEs
+.idea
+.vscode
 .idea/
 *.iml
 *.iws
+
+# Ignore coverage files
+coverage.lcov

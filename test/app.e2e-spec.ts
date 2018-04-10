@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing'
 import request from 'supertest'
 import { ApplicationModule } from './../src/app.module'
 
-describe('e2e tests', () => {
+describe('Shokku API e2e tests', () => {
   let app: INestApplication
 
   beforeAll(async () => {

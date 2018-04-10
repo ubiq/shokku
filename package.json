@@ -9,14 +9,14 @@
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:prod": "node dist/bundle.js",
-    "start:dev": "nodemon",
+    "start:dev": "webpack --watch --mode=development",
     "build:clean": "rm -rf dist",
-    "build:prod": "webpack --env.prod -p",
+    "build:prod": "webpack --mode=production --env.prod",
     "test:run": "jest",
     "test:cov": "jest --coverage",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "format": "prettier --write \"**/*.ts\"",
-    "lint:run": "tslint --project . --config tslint.json",
+    "lint": "tslint --project . --config tslint.json",
     "shokku-cli": "node ./bin/shokku-cli.js"
   },
   "dependencies": {

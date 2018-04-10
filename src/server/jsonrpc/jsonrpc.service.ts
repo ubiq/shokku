@@ -52,7 +52,7 @@ export default class JsonRpcService {
     }
   }
 
-  rpcMethod(model: Object): object {
+  rpcMethod(model: object): object {
     throw new Error('Method not implemented.')
   }
 

@@ -1,7 +1,9 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const NodemonPlugin = require('nodemon-webpack-plugin');
 
 module.exports = {
-  mode: 'development',
+  target: 'node',
   entry: './src/main.ts',
   module: {
     rules: [{
@@ -13,12 +15,15 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {
-      '@': "src/"
-  }
+      '@': path.resolve(__dirname, 'src')
+    }
   },
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
   },
-  plugins: []
+  plugins: [
+    new UglifyJsPlugin(),
+    new NodemonPlugin()
+  ]
 };
