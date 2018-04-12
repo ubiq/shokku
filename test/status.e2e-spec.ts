@@ -1,9 +1,10 @@
 import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
+import { expect } from 'chai'
 import request from 'supertest'
 import { ApplicationModule } from './../src/app.module'
 
-describe('Shokku API e2e tests', () => {
+xdescribe('status.controller e2e tests', () => {
   let app: INestApplication
 
   beforeAll(async () => {
@@ -12,12 +13,16 @@ describe('Shokku API e2e tests', () => {
     }).compile()
 
     app = moduleFixture.createNestApplication();
-    await app.init();
+    await app.init()
   })
 
-  it('/GET /', () => {
-    return request(app.getHttpServer())
-      .get('/')
-      .expect(204)
+  test('when GET req -> "/v1/status" | resp -> 200', async () => {
+    const r = await request(app.getHttpServer())
+      .get('/v1/status')
+      .expect(200)
+
+    expect(r.body).to.be.an('object')
+    expect(r.body.mainnet).to.be.a('string')
+    expect(r.body.testnet).to.be.a('string')
   })
 })

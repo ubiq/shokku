@@ -7,24 +7,27 @@
   "private": true,
   "main": "./build/bundle.js",
   "scripts": {
-    "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:prod": "node dist/bundle.js",
-    "start:dev": "webpack --watch --mode=development",
+    "start:dev": "webpack --watch --mode=development --progress --colors",
     "build:clean": "rm -rf dist",
     "build:prod": "webpack --mode=production --env.prod",
     "test:run": "jest",
     "test:cov": "jest --coverage",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "format": "prettier --write \"**/*.ts\"",
-    "lint": "tslint --project . --config tslint.json",
+    "lint": "tslint --config tslint.json --project .",
     "shokku-cli": "node ./bin/shokku-cli.js"
   },
   "dependencies": {
+    "@nest-middlewares/morgan": "^1.1.1",
     "@nestjs/common": "^4.5.9",
     "@nestjs/core": "^4.5.10",
     "@nestjs/microservices": "^4.5.8",
+    "@nestjs/swagger": "^1.2.2",
     "@nestjs/testing": "^4.5.5",
     "@nestjs/websockets": "^4.5.8",
+    "@types/chai": "^4.1.2",
+    "@types/lodash": "^4.14.106",
     "axios": "^0.18.0",
     "class-transformer": "^0.1.9",
     "class-validator": "^0.8.5",
@@ -33,6 +36,7 @@
     "nest-router": "^1.0.5",
     "reflect-metadata": "^0.1.12",
     "rxjs": "^5.5.6",
+    "swagger-ui-express": "^3.0.6",
     "typescript": "^2.8.1",
     "web3": "^1.0.0-beta.33",
     "web3-core-helpers": "^1.0.0-beta.33",
@@ -43,7 +47,10 @@
     "@types/jest": "^21.1.8",
     "@types/node": "^9.3.0",
     "@types/supertest": "^2.0.4",
+    "chai": "^4.1.2",
     "commander": "^2.15.1",
+    "dotenv": "^5.0.1",
+    "ganache-core": "^2.1.0",
     "jest": "^21.2.1",
     "nodemon": "^1.14.1",
     "nodemon-webpack-plugin": "^0.1.6",
@@ -58,15 +65,19 @@
     "tslint": "5.3.2",
     "web3-utils": "^1.0.0-beta.33",
     "webpack": "^4.5.0",
-    "webpack-cli": "^2.0.14"
+    "webpack-cli": "^2.0.14",
+    "solc": "^0.4.21"
   },
   "jest": {
+    "rootDir": "src",
+    "moduleNameMapper": {
+      "^@/(.*)": "<rootDir>/src/$1"
+    },
     "moduleFileExtensions": [
       "js",
       "json",
       "ts"
     ],
-    "rootDir": "src",
     "testRegex": ".spec.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"

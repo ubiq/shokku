@@ -1,9 +1,23 @@
-import { NestFactory } from '@nestjs/core'
 import { ApplicationModule } from '@/app.module'
+import { NestFactory } from '@nestjs/core'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
+import * as express from 'express'
+import * as SwaggerUI from 'swagger-ui-express'
 
 async function bootstrap() {
-	const app = await NestFactory.create(ApplicationModule)
-	await app.listen(3000)
+  const server = express()
+  const app = await NestFactory.create(ApplicationModule, server, {})
+
+  const options = new DocumentBuilder()
+    .setTitle('SHOKKU API')
+    .setDescription('An open source scalable blockchain infrastructure for Ubiq, Ethereum and IPFS that runs on Kubernetes')
+    .setVersion('1.0')
+    .build()
+
+  const document = SwaggerModule.createDocument(app, options)
+  server.use('/swagger', SwaggerUI.serve, SwaggerUI.setup(document))
+
+  await app.listen(3000)
 }
 
 bootstrap()

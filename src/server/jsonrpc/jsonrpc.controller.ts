@@ -10,7 +10,7 @@ import {
   LoggerService,
 } from '@nestjs/common'
 import JsonRpcService from '@/server/jsonrpc/jsonrpc.service'
-import JsonRpcModel from '@/server/jsonrpc/model/jsonrpc.model'
+import JsonRpcModel from '@/server/jsonrpc/models/jsonrpc.model'
 import JsonRpcValidationPipe from '@/server/jsonrpc/pipes/jsonrpc.validation.pipe'
 import JsonRpcTransformerPipe from '@/server/jsonrpc/pipes/jsonrpc.transformer.pipe'
 

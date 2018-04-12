@@ -1,4 +1,5 @@
 import { Component } from '@nestjs/common'
+import JsonRpcModel from '@/server/jsonrpc/models/jsonrpc.model'
 
 @Component()
 export default class JsonRpcService {
@@ -52,7 +53,7 @@ export default class JsonRpcService {
     }
   }
 
-  rpcMethod(model: object): object {
+  rpcMethod(model: JsonRpcModel): object {
     throw new Error('Method not implemented.')
   }
 

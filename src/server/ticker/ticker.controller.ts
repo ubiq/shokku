@@ -6,7 +6,7 @@ export default class TickerController {
   constructor(private readonly tickerService: TickerService) {
   }
 
-  @Get()
+  @Get('symbols')
   symbols() {
     return this.tickerService.symbols()
   }

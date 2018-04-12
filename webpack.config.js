@@ -1,10 +1,10 @@
 const path = require('path');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const NodemonPlugin = require('nodemon-webpack-plugin');
 
 module.exports = {
   target: 'node',
   entry: './src/main.ts',
+  devtool: 'eval-source-map',
   module: {
     rules: [{
       test: /\.ts$/,
@@ -23,7 +23,14 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   plugins: [
-    new UglifyJsPlugin(),
-    new NodemonPlugin()
+    new NodemonPlugin({
+      "watch": [
+        "src"
+      ],
+      "ext": "ts",
+      "ignore": [
+        "src/**/*.spec.ts"
+      ],
+    })
   ]
 };
