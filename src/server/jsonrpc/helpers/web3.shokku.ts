@@ -1,7 +1,4 @@
-import {
-  Joi,
-  Schemas,
-} from '@/server/jsonrpc/helpers/joi.eth.extended'
+import { Joi, Schemas } from '@/server/jsonrpc/helpers/joi.eth.extended'
 import _ from '@/server/jsonrpc/helpers/lodash.eth.extended'
 import { Component } from '@nestjs/common'
 import Web3 from 'web3'
@@ -110,7 +107,7 @@ const web3SafeMethods = {
         }
 
         const quantity = args[1]
-        const isQuantity = _.isBlockTagOrHex(quantity)
+        const isQuantity = _.isBlockTag(quantity) || _.isHex(quantity)
         if (!isQuantity) {
           return false
         }
@@ -136,7 +133,7 @@ const web3SafeMethods = {
         }
 
         const blockNumber = args[2]
-        const isBlockNumber = _.isBlockTagOrHex(blockNumber)
+        const isBlockNumber = _.isBlockTag(blockNumber) || _.isHex(blockNumber)
         if (!isBlockNumber) {
           return false
         }
@@ -156,7 +153,7 @@ const web3SafeMethods = {
         }
 
         const quantity = args[1]
-        const isQuantity = _.isBlockTagOrHex(quantity)
+        const isQuantity = _.isBlockTag(quantity) || _.isHex(quantity)
         if (!isQuantity) {
           return false
         }
@@ -180,7 +177,7 @@ const web3SafeMethods = {
       params: 1,
       validate: args => {
         const quantity = args[0]
-        return _.isBlockTagOrHex(quantity)
+        return _.isBlockTag(quantity) || _.isHex(quantity)
       },
       outputFormatter: res => (_.isNull(res) ? '' : res),
     }),
@@ -200,7 +197,7 @@ const web3SafeMethods = {
       params: 1,
       validate: args => {
         const quantity = args[0]
-        return _.isBlockTagOrHex(quantity)
+        return _.isBlockTag(quantity) || _.isHex(quantity)
       },
       outputFormatter: res => (_.isNull(res) ? '' : res),
     }),
@@ -216,7 +213,7 @@ const web3SafeMethods = {
         }
 
         const quantity = args[1]
-        const isQuantity = _.isBlockTagOrHex(quantity)
+        const isQuantity = _.isBlockTag(quantity) || _.isHex(quantity)
         if (!isQuantity) {
           return false
         }
@@ -242,7 +239,7 @@ const web3SafeMethods = {
         }
 
         const quantity = args[1]
-        const isQuantity = _.isBlockTagOrHex(quantity)
+        const isQuantity = _.isBlockTag(quantity) || _.isHex(quantity)
         if (!isQuantity) {
           return false
         }
@@ -277,7 +274,7 @@ const web3SafeMethods = {
       params: 2,
       validate: args => {
         const blockNumber = args[0]
-        const isBlockNumber = _.isBlockTagOrHex(blockNumber)
+        const isBlockNumber = _.isBlockTag(blockNumber) || _.isHex(blockNumber)
         if (!isBlockNumber) {
           return false
         }
@@ -297,7 +294,7 @@ const web3SafeMethods = {
       params: 1,
       validate: args => {
         const txHash = args[0]
-        const isTxHash = _.isBlockTagOrHex(txHash)
+        const isTxHash = _.isBlockTag(txHash) || _.isHex(txHash)
         return isTxHash
       },
       outputFormatter: res => (_.isNull(res) ? {} : res),
@@ -329,7 +326,7 @@ const web3SafeMethods = {
       params: 2,
       validate: args => {
         const blockNumber = args[0]
-        const isBlockNumber = _.isBlockTagOrHex(blockNumber)
+        const isBlockNumber = _.isBlockTag(blockNumber) || _.isHex(blockNumber)
         if (!isBlockNumber) {
           return false
         }
@@ -360,7 +357,7 @@ const web3SafeMethods = {
       params: 2,
       validate: args => {
         const blockNumber = args[0]
-        const isBlockNumber = _.isBlockTagOrHex(blockNumber)
+        const isBlockNumber = _.isBlockTag(blockNumber) || _.isHex(blockNumber)
         if (!isBlockNumber) {
           return false
         }
@@ -441,7 +438,7 @@ const web3SafeMethods = {
         }
 
         const quantity = args[1]
-        const isQuantity = _.isBlockTagOrHex(quantity)
+        const isQuantity = _.isBlockTag(quantity) || _.isHex(quantity)
         if (!isQuantity) {
           return false
         }

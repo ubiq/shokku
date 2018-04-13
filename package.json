@@ -49,6 +49,7 @@
     "@types/supertest": "^2.0.4",
     "chai": "^4.1.2",
     "commander": "^2.15.1",
+    "copy-webpack-plugin": "^4.5.1",
     "dotenv": "^5.0.1",
     "ganache-core": "^2.1.0",
     "jest": "^21.2.1",
@@ -57,6 +58,7 @@
     "ora": "^2.0.0",
     "prettier": "^1.11.1",
     "shelljs": "^0.8.1",
+    "solc": "^0.4.21",
     "supertest": "^3.0.0",
     "ts-jest": "^21.2.4",
     "ts-loader": "^4.2.0",
@@ -65,8 +67,7 @@
     "tslint": "5.3.2",
     "web3-utils": "^1.0.0-beta.33",
     "webpack": "^4.5.0",
-    "webpack-cli": "^2.0.14",
-    "solc": "^0.4.21"
+    "webpack-cli": "^2.0.14"
   },
   "jest": {
     "rootDir": "src",

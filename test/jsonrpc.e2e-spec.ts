@@ -40,7 +40,7 @@ const expectStandardResponse = r => {
 class Ganacher {
 
   private opts: object
-  private server
+  private server: any
   private contracts: object
   private blocks: object
   private web3: Web3

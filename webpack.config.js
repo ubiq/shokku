@@ -1,10 +1,14 @@
 const path = require('path');
 const NodemonPlugin = require('nodemon-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   target: 'node',
   entry: './src/main.ts',
   devtool: 'eval-source-map',
+  node: {
+    __dirname: true
+  },
   module: {
     rules: [{
       test: /\.ts$/,
@@ -23,6 +27,9 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   plugins: [
+    new CopyWebpackPlugin([
+      'node_modules/swagger-ui-express/indexTemplate.html'
+    ]),
     new NodemonPlugin({
       "watch": [
         "src"
@@ -31,6 +38,6 @@ module.exports = {
       "ignore": [
         "src/**/*.spec.ts"
       ],
-    })
+    }),
   ]
 };
