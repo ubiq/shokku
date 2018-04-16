@@ -1,5 +1,5 @@
 import { Get, HttpCode, Controller } from '@nestjs/common'
-import StatusService from '@/server/status/status.service'
+import StatusService from '@/api/server/status/status.service'
 
 @Controller('status')
 export default class StatusController {

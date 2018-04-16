@@ -1,67 +1,61 @@
 {
-  "domain": "myshokku.com",
-  "domain-local": "myshokku.lan",
-  "subdomains": ["api", "mainnet.api", "testnet.api"],
-  "email": "example@domain.com",
-  "s3": {
-    "bucket": "mys3.myshokku.com"
+  "domains": {
+    "remote": "shokku.com",
+    "local": "shokku.lan"
   },
+  "email": "example@domain.com",
   "docker": {
-    "swarm": {
-      "name": "api"
-    },
     "registry": {
-      "domain": "registry.myshokku.com",
-      "local": "shokku",
-      "auth": "shokku:$$1$$xyz$$jAlmRpcFe.aiPOIXET9GG/"
-    },
-    "projects": {
-      "api": {
-        "name": "api",
-        "version": "1.0.0"
-      },
-      "api-dev": {
-        "name": "api-dev",
-        "version": "1.0.0"
-      },
-      "traefik": {
-        "name": "traefik",
-        "version": "1.0.0"
-      },
-      "gubiq": {
-        "name": "gubiq",
-        "version": "1.0.0"
+      "remote": "registry.shokku.com",
+      "local": "shokku"
+    }
+  },
+  "s3": {
+    "bucket": "mys3.shokku.com"
+  },
+  "projects": {
+    "api": {
+      "enabled": true,
+      "subdomains": ["api"],
+      "networks": ["ubiq"],
+      "docker": {
+        "images": [{
+            "name": "api",
+            "folder": "api",
+            "dockerfile": "Dockerfile",
+            "version": "1.0.0",
+            "build": "."
+          },
+          {
+            "name": "api-dev",
+            "folder": "api",
+            "dockerfile": "Dockerfile.dev",
+            "version": "1.0.0",
+            "build": ".",
+            "dev": true
+          },
+          {
+            "name": "traefik",
+            "folder": "traefik",
+            "dockerfile": "Dockerfile",
+            "version": "1.0.0",
+            "build": "docker/images/traefik"
+          },
+          {
+            "name": "gubiq",
+            "folder": "gubiq",
+            "dockerfile": "Dockerfile",
+            "version": "1.0.0",
+            "build": "docker/images/gubiq"
+          }
+        ]
       }
     },
-    "images": [{
-        "name": "api",
-        "folder": "api",
-        "dockerfile": "Dockerfile",
-        "version": "1.0.0",
-        "build": "."
-      },
-      {
-        "name": "api-dev",
-        "folder": "api",
-        "dockerfile": "Dockerfile.dev",
-        "version": "1.0.0",
-        "build": ".",
-        "dev": true
-      },
-      {
-        "name": "traefik",
-        "folder": "traefik",
-        "dockerfile": "Dockerfile",
-        "version": "1.0.0",
-        "build": "docker/images/traefik"
-      },
-      {
-        "name": "gubiq",
-        "folder": "gubiq",
-        "dockerfile": "Dockerfile",
-        "version": "1.0.0",
-        "build": "docker/images/gubiq"
+    "indexer": {
+      "enabled": true,
+      "docker": {
+        "images": []
       }
-    ]
+    }
   }
 }

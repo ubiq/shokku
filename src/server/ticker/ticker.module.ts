@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import TickerController from '@/server/ticker/ticker.controller'
-import TickerService from '@/server/ticker/ticker.service'
+import TickerController from '@/api/server/ticker/ticker.controller'
+import TickerService from '@/api/server/ticker/ticker.service'
 
 @Module({
     controllers: [TickerController],

@@ -6,7 +6,8 @@
   "moduleFileExtensions": [
     "js",
     "json",
-    "ts"
+    "ts",
+    "node"
   ],
   "testRegex": ".e2e-spec.ts$",
   "transform": {

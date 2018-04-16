@@ -30,7 +30,7 @@ const Joi = J.extend({
   }, {
     name: 'isBlockTagOrHex',
     validate(params, value, state, options) {
-      if (!_.isBlockTagOrHex(value)) {
+      if (!_.isBlockTag(value) || !_.isHex(value)) {
         return this.createError('invalid ethereum block tag or hexadecimal passed', {
           v: value,
         }, state, options)

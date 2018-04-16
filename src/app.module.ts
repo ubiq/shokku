@@ -7,6 +7,8 @@ import TickerModule from '@/server/ticker/ticker.module'
 import { MorganMiddleware } from '@nest-middlewares/morgan'
 import { MiddlewaresConsumer, Module, RequestMethod } from '@nestjs/common'
 import { RouterModule } from 'nest-router'
+// import { graphqlExpress } from 'apollo-server-express'
+// import { GraphQLModule, GraphQLFactory } from '@nestjs/graphql'
 
 @Module({
   imports: [
@@ -15,6 +17,7 @@ import { RouterModule } from 'nest-router'
     JsonRpcModule,
     StatusModule,
     TickerModule,
+    // GraphQLModule
   ],
   controllers: [
     AppController,
@@ -22,10 +25,23 @@ import { RouterModule } from 'nest-router'
   components: [],
 })
 export class ApplicationModule {
+  // constructor(private readonly graphQLFactory: GraphQLFactory) {}
+
   configure(consumer: MiddlewaresConsumer): void {
+    // GraphQL
+    // const typeDefs = this.graphQLFactory.mergeTypesByPaths('./**/*.graphql')
+    // const schema = this.graphQLFactory.createSchema({ typeDefs })
+
+    // const qraphql = graphqlExpress(req => ({ schema, rootValue: req }))
+    // consumer
+    //   .apply(qraphql)
+    //   .forRoutes({ path: '/graphql', method: RequestMethod.ALL })
+
+    // Logging
     MorganMiddleware.configure('tiny')
     consumer.apply(MorganMiddleware).forRoutes({
       path: '*', method: RequestMethod.ALL
     })
+
   }
 }

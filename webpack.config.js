@@ -1,6 +1,6 @@
-const path = require('path');
-const NodemonPlugin = require('nodemon-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path')
+const NodemonPlugin = require('nodemon-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   target: 'node',
@@ -40,4 +40,4 @@ module.exports = {
       ],
     }),
   ]
-};
+}

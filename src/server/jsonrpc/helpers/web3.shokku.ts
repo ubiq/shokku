@@ -1,3 +1,4 @@
+import { NetworkService } from '@/common/providers/network.provider'
 import { Joi, Schemas } from '@/server/jsonrpc/helpers/joi.eth.extended'
 import _ from '@/server/jsonrpc/helpers/lodash.eth.extended'
 import { Component } from '@nestjs/common'
@@ -7,18 +8,14 @@ import Method from 'web3-core-method'
 
 // Override basic web3 'Method' class to allow having better params validation
 // (some calls have optional arguments, so we have to take those into account)
-class EMethod extends Method {
+export class Web3Method extends Method {
   constructor(options) {
     super(options)
     super.validate = options.validate || (() => true)
     super.schema = options.schema || {}
   }
 
-  validateArgs(args = []) {
-    if (!_.isArray(args)) {
-      throw errors.InvalidNumberOfParams(args.length, super.params, super.name)
-    }
-
+  validateArgs(args: Array<any> = []) {
     if (args.length !== super.params) {
       throw errors.InvalidNumberOfParams(args.length, super.params, super.name)
     }
@@ -41,61 +38,61 @@ class EMethod extends Method {
 const web3SafeMethods = {
   property: 'safe',
   methods: [
-    new EMethod({
+    new Web3Method({
       name: 'web3_clientVersion',
       call: 'web3_clientVersion',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'net_version',
       call: 'net_version',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'net_listening',
       call: 'net_listening',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'net_peerCount',
       call: 'net_peerCount',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_protocolVersion',
       call: 'eth_protocolVersion',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_syncing',
       call: 'eth_syncing',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_mining',
       call: 'eth_mining',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_hashrate',
       call: 'eth_hashrate',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_gasPrice',
       call: 'eth_gasPrice',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_accounts',
       call: 'eth_accounts',
       outputFormatter: res => (_.isNull(res) ? [] : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_blockNumber',
       call: 'eth_blockNumber',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getCompilers',
       call: 'eth_getCompilers',
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getWork',
       call: 'eth_getWork',
       outputFormatter: res => (_.isNull(res) ? [] : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getBalance',
       call: 'eth_getBalance',
       params: 2,
@@ -115,7 +112,7 @@ const web3SafeMethods = {
         return true
       },
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getStorageAt',
       call: 'eth_getStorageAt',
       params: 3,
@@ -141,7 +138,7 @@ const web3SafeMethods = {
         return true
       },
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getTransactionCount',
       call: 'eth_getTransactionCount',
       params: 2,
@@ -161,7 +158,7 @@ const web3SafeMethods = {
         return true
       },
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getBlockTransactionCountByHash',
       call: 'eth_getBlockTransactionCountByHash',
       params: 1,
@@ -171,7 +168,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? '' : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getBlockTransactionCountByNumber',
       call: 'eth_getBlockTransactionCountByNumber',
       params: 1,
@@ -181,7 +178,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? '' : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getUncleCountByBlockHash',
       call: 'eth_getUncleCountByBlockHash',
       params: 1,
@@ -191,7 +188,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? '' : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getUncleCountByBlockNumber',
       call: 'eth_getUncleCountByBlockNumber',
       params: 1,
@@ -201,7 +198,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? '' : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getCode',
       call: 'eth_getCode',
       params: 2,
@@ -222,7 +219,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? '' : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_call',
       call: 'eth_call',
       params: 2,
@@ -247,7 +244,7 @@ const web3SafeMethods = {
         return true
       },
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getBlockByHash',
       call: 'eth_getBlockByHash',
       params: 2,
@@ -268,7 +265,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? {} : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getBlockByNumber',
       call: 'eth_getBlockByNumber',
       params: 2,
@@ -288,7 +285,7 @@ const web3SafeMethods = {
         return true
       },
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getTransactionByHash',
       call: 'eth_getTransactionByHash',
       params: 1,
@@ -299,7 +296,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? {} : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getTransactionByBlockHashAndIndex',
       call: 'eth_getTransactionByBlockHashAndIndex',
       params: 2,
@@ -320,7 +317,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? {} : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getTransactionByBlockNumberAndIndex',
       call: 'eth_getTransactionByBlockNumberAndIndex',
       params: 2,
@@ -341,7 +338,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? {} : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getTransactionReceipt',
       call: 'eth_getTransactionReceipt',
       params: 1,
@@ -351,7 +348,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? {} : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getUncleByBlockNumberAndIndex',
       call: 'eth_getUncleByBlockNumberAndIndex',
       params: 2,
@@ -371,7 +368,7 @@ const web3SafeMethods = {
         return true
       },
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getUncleByBlockHashAndIndex',
       call: 'eth_getUncleByBlockHashAndIndex',
       params: 2,
@@ -392,7 +389,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? {} : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_getLogs',
       call: 'eth_getLogs',
       params: 1,
@@ -412,7 +409,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? [] : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_sendRawTransaction',
       call: 'eth_sendRawTransaction',
       params: 1,
@@ -421,7 +418,7 @@ const web3SafeMethods = {
         return _.isTxHash(txHash)
       },
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_estimateGas',
       call: 'eth_estimateGas',
       params: 2,
@@ -447,7 +444,7 @@ const web3SafeMethods = {
       },
       outputFormatter: res => (_.isNull(res) ? '' : res),
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_submitWork',
       call: 'eth_submitWork',
       params: 3,
@@ -473,7 +470,7 @@ const web3SafeMethods = {
         return true
       },
     }),
-    new EMethod({
+    new Web3Method({
       name: 'eth_submitHashrate',
       call: 'eth_submitHashrate',
       params: 2,
@@ -496,18 +493,13 @@ const web3SafeMethods = {
   ],
 }
 
-export interface ShokkuWeb3Provider {
-  id()
-  createProvider()
-}
-
 @Component()
 export default class ShokkuWeb3 {
   private w3s = {}
 
-  constructor(providers: Array<ShokkuWeb3Provider>) {
+  constructor(providers: Array<NetworkService>) {
     providers.forEach(provider => {
-      const w3 = new Web3(provider.createProvider())
+      const w3 = provider.createWeb3Provider()
       Object.defineProperty(this.w3s, provider.id(), w3)
     })
   }

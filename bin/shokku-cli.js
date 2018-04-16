@@ -14,7 +14,7 @@ const ora = new Ora({
 })
 
 program
-  .description('Shokku utility cli for generating, building and uploading related docker images')
+  .description('Shokku utility cli for building and uploading docker images')
   .version(package.version, '-v, --version')
 
 program
