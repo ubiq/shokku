@@ -7,6 +7,7 @@ import TickerModule from '@/server/ticker/ticker.module'
 import { MorganMiddleware } from '@nest-middlewares/morgan'
 import { MiddlewaresConsumer, Module, RequestMethod } from '@nestjs/common'
 import { RouterModule } from 'nest-router'
+import NetworkRepository from '@/core/providers/networks.repository'
 // import { graphqlExpress } from 'apollo-server-express'
 // import { GraphQLModule, GraphQLFactory } from '@nestjs/graphql'
 
@@ -22,7 +23,9 @@ import { RouterModule } from 'nest-router'
   controllers: [
     AppController,
   ],
-  components: [],
+  components: [
+    NetworkRepository
+  ],
 })
 export class ApplicationModule {
   // constructor(private readonly graphQLFactory: GraphQLFactory) {}

@@ -10,7 +10,7 @@ const validatorOpts = {
 }
 
 @Pipe()
-export default class JsonRpcValidationPipe implements PipeTransform<any> {
+export default class JsonRpcPipe implements PipeTransform<any> {
   async transform(value, metadata: ArgumentMetadata) {
     const { metatype } = metadata
     if (!metatype || !this.isValidMetatype(metatype)) {

@@ -1,15 +1,23 @@
 import { Component } from '@nestjs/common'
 import JsonRpcModel from '@/server/jsonrpc/models/jsonrpc.model'
+import NetworksRepository from '@/core/networks/networks.repository'
 
 @Component()
 export default class JsonRpcService {
+  constructor(private readonly repository: NetworksRepository) { }
+
   networks(): object {
-    return {
-      networks: ['mainnet', 'testnet'],
-    }
+    const networks = this.repository.getAll().map(p => p.id)
+    return { networks }
   }
 
-  methods(): object {
+  chains(network: string): object {
+    const n = this.repository.get(network)
+    const chains = Array.from(n.networks.keys())
+    return { chains }
+  }
+
+  methods(network: string): object {
     return {
       get: [
         'web3_clientVersion',
@@ -53,7 +61,7 @@ export default class JsonRpcService {
     }
   }
 
-  rpcMethod(model: JsonRpcModel): object {
+  rpcMethod(network: string, model: JsonRpcModel): object {
     throw new Error('Method not implemented.')
   }
 

@@ -1,5 +1,5 @@
 import { default as J } from 'joi'
-import _ from '@/server/jsonrpc/helpers/lodash.eth.extended'
+import _ from '@/core/validation/lodash/lodash.eth.extended'
 
 const Joi = J.extend({
   name: 'eth',
@@ -28,10 +28,10 @@ const Joi = J.extend({
       return value
     },
   }, {
-    name: 'isBlockTagOrHex',
+    name: 'isBlockTag',
     validate(params, value, state, options) {
-      if (!_.isBlockTag(value) || !_.isHex(value)) {
-        return this.createError('invalid ethereum block tag or hexadecimal passed', {
+      if (!_.isBlockTag(value)) {
+        return this.createError('invalid ethereum block tag passed', {
           v: value,
         }, state, options)
       }
@@ -50,10 +50,10 @@ const Joi = J.extend({
   }],
 })
 
-const Schemas = {
+const JoiRpcSchemas = {
   Filter: Joi.object().keys({
-    fromBlock: Joi.eth().isBlockTagOrHex(),
-    toBlock: Joi.eth().isBlockTagOrHex(),
+    fromBlock: [Joi.eth().isBlockTag, Joi.eth().isHex() ],
+    toBlock: [Joi.eth().isBlockTag, Joi.eth().isHex() ],
     address: [Joi.eth().isAddress(), Joi.array().items(Joi.eth().isAddress())],
     topics: Joi.array().items(Joi.eth().isTxHash(), Joi.allow(null)),
   }),
@@ -70,5 +70,5 @@ const Schemas = {
 
 export {
   Joi,
-  Schemas,
+  JoiRpcSchemas,
 }

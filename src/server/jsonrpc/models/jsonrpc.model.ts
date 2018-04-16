@@ -1,10 +1,10 @@
-import { IsString, IsInt, IsPositive, IsNumberString, Contains } from 'class-validator'
-import IsRpcMethod from '@/server/jsonrpc/helpers/class.validator.eth.decorators'
+import { IsString, IsInt, IsPositive, IsNumberString, Contains, IsArray } from 'class-validator'
+import { IsRpcMethod } from '@/core/decorators/shokku.decorators'
 
 export default class JsonRpcModel {
   @IsInt()
   @IsPositive()
-  readonly id: string
+  readonly id?: number
 
   @IsNumberString()
   @Contains('2.0')
@@ -12,4 +12,7 @@ export default class JsonRpcModel {
 
   @IsRpcMethod()
   readonly method: string
+
+  @IsArray()
+  readonly params?: Array<any>
 }

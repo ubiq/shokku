@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as express from 'express'
 import * as SwaggerUI from 'swagger-ui-express'
+import * as reflect from 'reflect-metadata'
 
 async function bootstrap() {
   const server = express()
