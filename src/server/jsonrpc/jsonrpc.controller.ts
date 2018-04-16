@@ -18,35 +18,35 @@ export default class JsonRpcController {
   constructor(private readonly jsonRpcService: JsonRpcService) {
   }
 
-  @Get()
+  @Get('networks')
   networks() {
     return this.jsonRpcService.networks()
   }
 
   @Get(':network/chains')
-  chains(network) {
-    return this.jsonRpcService.chains(network)
+  chains(@Param() params) {
+    return this.jsonRpcService.chains(params.network)
   }
 
   @Get(':network/methods')
-  methods() {
-    return this.jsonRpcService.methods()
+  methods(@Param() params) {
+    return this.jsonRpcService.methods(params.network)
   }
 
   @Get(':network/:method')
   @UsePipes(new JsonRpcPipe())
-  getMethod(jsonRpcModel: JsonRpcModel) {
+  getMethod(@Param() params, jsonRpcModel: JsonRpcModel) {
     try {
-      return this.jsonRpcService.rpcMethod(jsonRpcModel)
+      return this.jsonRpcService.rpcMethod(params.network, jsonRpcModel)
     } catch (err) {
       this.toHttpException(err)
     }
   }
 
-  @Post()
-  postMethod(@Body(new JsonRpcPipe()) jsonRpcModel: JsonRpcModel) {
+  @Post(':network')
+  postMethod(@Param() params, @Body(new JsonRpcPipe()) jsonRpcModel: JsonRpcModel) {
     try {
-      return this.jsonRpcService.rpcMethod(jsonRpcModel)
+      return this.jsonRpcService.rpcMethod(params.network, jsonRpcModel)
     } catch (err) {
       this.toHttpException(err)
     }

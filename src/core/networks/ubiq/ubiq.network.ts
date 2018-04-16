@@ -1,6 +1,7 @@
 import { NetworkChain, NetworkProvider, NetworkProviderFactory } from '@/core/networks/network.provider'
 import { Joi, JoiRpcSchemas } from '@/core/validation/joi/joi.eth.extended'
-import _ from '@/core/validation/lodash/lodash.eth.extended'
+import _ from 'lodash'
+import e from '@/core/validation/eth.fn/eth.fn'
 import { Web3Method } from '@/core/web3/web3.shokku'
 import Web3 from 'web3'
 
@@ -51,6 +52,48 @@ const VALID_RPC_METHODS = [
   'eth_submitWork',
   'eth_submitHashrate',
 ]
+
+const VALID_RPC_METHODS_RESPONSE = {
+  get: [
+    'web3_clientVersion',
+    'net_version',
+    'net_listening',
+    'net_peerCount',
+    'eth_protocolVersion',
+    'eth_syncing',
+    'eth_mining',
+    'eth_hashrate',
+    'eth_gasPrice',
+    'eth_accounts',
+    'eth_blockNumber',
+    'eth_getBalance',
+    'eth_getStorageAt',
+    'eth_getTransactionCount',
+    'eth_getBlockTransactionCountByHash',
+    'eth_getBlockTransactionCountByNumber',
+    'eth_getUncleCountByBlockHash',
+    'eth_getUncleCountByBlockNumber',
+    'eth_getCode',
+    'eth_call',
+    'eth_getBlockByHash',
+    'eth_getBlockByNumber',
+    'eth_getTransactionByHash',
+    'eth_getTransactionByBlockHashAndIndex',
+    'eth_getTransactionByBlockNumberAndIndex',
+    'eth_getTransactionReceipt',
+    'eth_getUncleByBlockHashAndIndex',
+    'eth_getUncleByBlockNumberAndIndex',
+    'eth_getCompilers',
+    'eth_getLogs',
+    'eth_getWork',
+  ],
+  post: [
+    'eth_sendRawTransaction',
+    'eth_estimateGas',
+    'eth_submitWork',
+    'eth_submitHashrate',
+  ],
+}
 
 const WEB3_VALID_RPC_METHODS = [
   new Web3Method({
@@ -113,13 +156,13 @@ const WEB3_VALID_RPC_METHODS = [
     params: 2,
     validate: args => {
       const address = args[0]
-      const isAddress = _.isAddress(address)
+      const isAddress = e.isAddress(address)
       if (!isAddress) {
         return false
       }
 
       const quantity = args[1]
-      const isQuantity = _.isBlockTag(quantity) || _.isHex(quantity)
+      const isQuantity = e.isBlockTag(quantity) || e.isHex(quantity)
       if (!isQuantity) {
         return false
       }
@@ -133,19 +176,19 @@ const WEB3_VALID_RPC_METHODS = [
     params: 3,
     validate: args => {
       const address = args[0]
-      const isAddress = _.isAddress(address)
+      const isAddress = e.isAddress(address)
       if (!isAddress) {
         return false
       }
 
       const position = args[1]
-      const isPosition = _.isHex(position)
+      const isPosition = e.isHex(position)
       if (!isPosition) {
         return false
       }
 
       const blockNumber = args[2]
-      const isBlockNumber = _.isBlockTag(blockNumber) || _.isHex(blockNumber)
+      const isBlockNumber = e.isBlockTag(blockNumber) || e.isHex(blockNumber)
       if (!isBlockNumber) {
         return false
       }
@@ -159,13 +202,13 @@ const WEB3_VALID_RPC_METHODS = [
     params: 2,
     validate: args => {
       const address = args[0]
-      const isAddress = _.isAddress(address)
+      const isAddress = e.isAddress(address)
       if (!isAddress) {
         return false
       }
 
       const quantity = args[1]
-      const isQuantity = _.isBlockTag(quantity) || _.isHex(quantity)
+      const isQuantity = e.isBlockTag(quantity) || e.isHex(quantity)
       if (!isQuantity) {
         return false
       }
@@ -179,7 +222,7 @@ const WEB3_VALID_RPC_METHODS = [
     params: 1,
     validate: args => {
       const txHash = args[0]
-      return _.isTxHash(txHash)
+      return e.isTxHash(txHash)
     },
     outputFormatter: res => (_.isNull(res) ? '' : res),
   }),
@@ -189,7 +232,7 @@ const WEB3_VALID_RPC_METHODS = [
     params: 1,
     validate: args => {
       const quantity = args[0]
-      return _.isBlockTag(quantity) || _.isHex(quantity)
+      return e.isBlockTag(quantity) || e.isHex(quantity)
     },
     outputFormatter: res => (_.isNull(res) ? '' : res),
   }),
@@ -199,7 +242,7 @@ const WEB3_VALID_RPC_METHODS = [
     params: 1,
     validate: args => {
       const txHash = args[0]
-      return _.isTxHash(txHash)
+      return e.isTxHash(txHash)
     },
     outputFormatter: res => (_.isNull(res) ? '' : res),
   }),
@@ -209,7 +252,7 @@ const WEB3_VALID_RPC_METHODS = [
     params: 1,
     validate: args => {
       const quantity = args[0]
-      return _.isBlockTag(quantity) || _.isHex(quantity)
+      return e.isBlockTag(quantity) || e.isHex(quantity)
     },
     outputFormatter: res => (_.isNull(res) ? '' : res),
   }),
@@ -219,13 +262,13 @@ const WEB3_VALID_RPC_METHODS = [
     params: 2,
     validate: args => {
       const address = args[0]
-      const isAddress = _.isAddress(address)
+      const isAddress = e.isAddress(address)
       if (!isAddress) {
         return false
       }
 
       const quantity = args[1]
-      const isQuantity = _.isBlockTag(quantity) || _.isHex(quantity)
+      const isQuantity = e.isBlockTag(quantity) || e.isHex(quantity)
       if (!isQuantity) {
         return false
       }
@@ -251,7 +294,7 @@ const WEB3_VALID_RPC_METHODS = [
       }
 
       const quantity = args[1]
-      const isQuantity = _.isBlockTag(quantity) || _.isHex(quantity)
+      const isQuantity = e.isBlockTag(quantity) || e.isHex(quantity)
       if (!isQuantity) {
         return false
       }
@@ -265,13 +308,13 @@ const WEB3_VALID_RPC_METHODS = [
     params: 2,
     validate: args => {
       const txhash = args[0]
-      const isTxHash = _.isTxHash(txhash)
+      const isTxHash = e.isTxHash(txhash)
       if (!isTxHash) {
         return false
       }
 
       const bool = args[1]
-      const isBool = _.isBoolean(_.toBoolean(bool))
+      const isBool = _.isBoolean(e.toBoolean(bool))
       if (!isBool) {
         return false
       }
@@ -286,13 +329,13 @@ const WEB3_VALID_RPC_METHODS = [
     params: 2,
     validate: args => {
       const blockNumber = args[0]
-      const isBlockNumber = _.isBlockTag(blockNumber) || _.isHex(blockNumber)
+      const isBlockNumber = e.isBlockTag(blockNumber) || e.isHex(blockNumber)
       if (!isBlockNumber) {
         return false
       }
 
       const bool = args[1]
-      const isBoolean = _.isBoolean(_.toBoolean(bool))
+      const isBoolean = _.isBoolean(e.toBoolean(bool))
       if (!isBoolean) {
         return false
       }
@@ -306,7 +349,7 @@ const WEB3_VALID_RPC_METHODS = [
     params: 1,
     validate: args => {
       const txHash = args[0]
-      const isTxHash = _.isBlockTag(txHash) || _.isHex(txHash)
+      const isTxHash = e.isBlockTag(txHash) || e.isHex(txHash)
       return isTxHash
     },
     outputFormatter: res => (_.isNull(res) ? {} : res),
@@ -317,13 +360,13 @@ const WEB3_VALID_RPC_METHODS = [
     params: 2,
     validate: args => {
       const txHash = args[0]
-      const isTxHash = _.isTxHash(txHash)
+      const isTxHash = e.isTxHash(txHash)
       if (!isTxHash) {
         return false
       }
 
       const index = args[1]
-      const isIndex = _.isHex(index)
+      const isIndex = e.isHex(index)
       if (!isIndex) {
         return false
       }
@@ -338,13 +381,13 @@ const WEB3_VALID_RPC_METHODS = [
     params: 2,
     validate: args => {
       const blockNumber = args[0]
-      const isBlockNumber = _.isBlockTag(blockNumber) || _.isHex(blockNumber)
+      const isBlockNumber = e.isBlockTag(blockNumber) || e.isHex(blockNumber)
       if (!isBlockNumber) {
         return false
       }
 
       const index = args[1]
-      const isIndex = _.isHex(index)
+      const isIndex = e.isHex(index)
       if (!isIndex) {
         return false
       }
@@ -359,7 +402,7 @@ const WEB3_VALID_RPC_METHODS = [
     params: 1,
     validate: args => {
       const txHash = args[0]
-      return _.isTxHash(txHash)
+      return e.isTxHash(txHash)
     },
     outputFormatter: res => (_.isNull(res) ? {} : res),
   }),
@@ -369,13 +412,13 @@ const WEB3_VALID_RPC_METHODS = [
     params: 2,
     validate: args => {
       const blockNumber = args[0]
-      const isBlockNumber = _.isBlockTag(blockNumber) || _.isHex(blockNumber)
+      const isBlockNumber = e.isBlockTag(blockNumber) || e.isHex(blockNumber)
       if (!isBlockNumber) {
         return false
       }
 
       const indexPos = args[1]
-      const isIndexPos = _.isHex(indexPos)
+      const isIndexPos = e.isHex(indexPos)
       if (!isIndexPos) {
         return false
       }
@@ -389,13 +432,13 @@ const WEB3_VALID_RPC_METHODS = [
     params: 2,
     validate: args => {
       const txHash = args[0]
-      const isTxHash = _.isTxHash(txHash)
+      const isTxHash = e.isTxHash(txHash)
       if (!isTxHash) {
         return false
       }
 
       const indexPos = args[1]
-      const isIndexPos = _.isHex(indexPos)
+      const isIndexPos = e.isHex(indexPos)
       if (!isIndexPos) {
         return false
       }
@@ -430,7 +473,7 @@ const WEB3_VALID_RPC_METHODS = [
     params: 1,
     validate: args => {
       const txHash = args[0]
-      return _.isTxHash(txHash)
+      return e.isTxHash(txHash)
     },
   }),
   new Web3Method({
@@ -450,7 +493,7 @@ const WEB3_VALID_RPC_METHODS = [
       }
 
       const quantity = args[1]
-      const isQuantity = _.isBlockTag(quantity) || _.isHex(quantity)
+      const isQuantity = e.isBlockTag(quantity) || e.isHex(quantity)
       if (!isQuantity) {
         return false
       }
@@ -465,19 +508,19 @@ const WEB3_VALID_RPC_METHODS = [
     params: 3,
     validate: args => {
       const nonce = args[0]
-      const isNonce = _.isNonce(nonce)
+      const isNonce = e.isNonce(nonce)
       if (!isNonce) {
         return false
       }
 
       const headerHash = args[1]
-      const isHeaderHash = _.isTxHash(headerHash)
+      const isHeaderHash = e.isTxHash(headerHash)
       if (!isHeaderHash) {
         return false
       }
 
       const mixDigest = args[2]
-      const isMixDigest = _.isTxHash(mixDigest)
+      const isMixDigest = e.isTxHash(mixDigest)
       if (!isMixDigest) {
         return false
       }
@@ -491,13 +534,13 @@ const WEB3_VALID_RPC_METHODS = [
     params: 2,
     validate: args => {
       const hashrate = args[0]
-      const isHashrate = _.isTxHash(hashrate)
+      const isHashrate = e.isTxHash(hashrate)
       if (!isHashrate) {
         return false
       }
 
       const id = args[1]
-      const isId = _.isTxHash(id)
+      const isId = e.isTxHash(id)
       if (!isId) {
         return false
       }
@@ -509,15 +552,15 @@ const WEB3_VALID_RPC_METHODS = [
 
 const createWeb3Provider = () => {
   const provider = new Web3.providers.HttpProvider(process.env.API_GUBIQ_MN || UBIQ_DEFAULT_CLIENT_URL)
-    const w3 = new Web3(provider)
-    w3.extend({
-      property: 'safe',
-      methods: VALID_RPC_METHODS
-    })
-    return w3
+  const w3 = new Web3(provider)
+  w3.extend({
+    property: 'safe',
+    methods: VALID_RPC_METHODS,
+  })
+  return w3
 }
 
-class UbiqMainnetNetworkService implements NetworkChain {
+abstract class BaseUbiqNetworkService implements NetworkChain {
 
   readonly w3: Web3
 
@@ -525,44 +568,38 @@ class UbiqMainnetNetworkService implements NetworkChain {
     this.w3 = createWeb3Provider()
   }
 
+  id(): string {
+    return ''
+  }
+
+  exchangeSupportedTickers(): string[] {
+    return EXCHANGE_TICKERS
+  }
+
+  validRpcMethods(options?: any) {
+    return options.formatted ? VALID_RPC_METHODS_RESPONSE : VALID_RPC_METHODS
+  }
+}
+
+class UbiqMainnetNetworkService extends BaseUbiqNetworkService {
+
+  readonly w3: Web3
+
   id() {
     return 'mainnet'
   }
-
-  exchangeSupportedTickers(): String[] {
-    return EXCHANGE_TICKERS
-  }
-
-  validRpcMethods(): String[] {
-    throw VALID_RPC_METHODS
-  }
-
 }
 
-class UbiqTestnetNetworkService implements NetworkChain {
-
-  private readonly w3: Web3
-
-  constructor() {
-    this.w3 = createWeb3Provider()
-  }
+class UbiqTestnetNetworkService extends BaseUbiqNetworkService {
 
   id() {
     return 'testnet'
-  }
-
-  exchangeSupportedTickers(): String[] {
-    return EXCHANGE_TICKERS
-  }
-
-  validRpcMethods(): String[] {
-    throw VALID_RPC_METHODS
   }
 }
 
 export class UbiqNetworksProviderFactory implements NetworkProviderFactory {
   create(options: object): NetworkProvider {
-    const chains: Map<String, NetworkChain> = new Map()
+    const chains: Map<string, NetworkChain> = new Map()
 
     // Mainnet provider
     const mainnet = new UbiqMainnetNetworkService()

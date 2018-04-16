@@ -9,7 +9,7 @@ export function IsRpcMethod() {
       propertyName,
       validator: {
         validate(value: any, args: ValidationArguments) {
-          return typeof value === 'string' && _.includes(validRpcMethods, value)
+          return typeof value === 'string' && _.includes([], value)
         },
       },
     })

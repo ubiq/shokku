@@ -6,11 +6,11 @@ export interface NetworkProviderFactory {
 }
 
 export class NetworkProvider {
-  constructor(readonly id: string, readonly networks: Map<String, NetworkChain>) {}
+  constructor(readonly id: string, readonly networks: Map<string, NetworkChain>) {}
 }
 
 export interface NetworkChain {
   id(): string
-  exchangeSupportedTickers(): Array<String>
-  validRpcMethods(): Array<String>
+  exchangeSupportedTickers(): Array<string>
+  validRpcMethods(options?: any)
 }

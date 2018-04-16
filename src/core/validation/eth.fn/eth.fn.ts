@@ -1,16 +1,6 @@
-import _ from 'lodash'
 import helpers from 'web3-core-helpers'
 
-interface LoDashStaticExt extends _.LoDashStatic {
-  isAddress(address: string): boolean,
-  isTxHash(hash: string): boolean,
-  isNonce(nonce: string): boolean,
-  isHex(quantity: string): boolean,
-  isBlockTag(tag: string): boolean,
-  toBoolean(raw: any): boolean
-}
-
-const mixins = {
+export default {
   isAddress: address => helpers.utils.isAddress(address),
   isTxHash: hash => /^(?:0x|0X)[\da-f]{64}$/i.test(hash) || /^(?:0x|0X)[\dA-F]{64}$/i.test(hash),
   isNonce: nonce => /^(?:0x|0X)[\da-f]{16}$/i.test(nonce) || /^(?:0x|0X)[\dA-F]{16}$/i.test(nonce),
@@ -27,8 +17,5 @@ const mixins = {
       return str
     }
     return undefined
-  }
+  },
 }
-_.mixin(mixins)
-
-export default _ as LoDashStaticExt

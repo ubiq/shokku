@@ -1,5 +1,5 @@
 import { default as J } from 'joi'
-import _ from '@/core/validation/lodash/lodash.eth.extended'
+import e from '@/core/validation/eth.fn/eth.fn'
 
 const Joi = J.extend({
   name: 'eth',
@@ -10,7 +10,7 @@ const Joi = J.extend({
   rules: [{
     name: 'isAddress',
     validate(params, value, state, options) {
-      if (!_.isAddress(value)) {
+      if (!e.isAddress(value)) {
         return this.createError('invalid ethereum address passed', {
           v: value,
         }, state, options)
@@ -20,7 +20,7 @@ const Joi = J.extend({
   }, {
     name: 'isTxHash',
     validate(params, value, state, options) {
-      if (!_.isTxHash(value)) {
+      if (!e.isTxHash(value)) {
         return this.createError('invalid ethereum tx hash passed', {
           v: value,
         }, state, options)
@@ -30,7 +30,7 @@ const Joi = J.extend({
   }, {
     name: 'isBlockTag',
     validate(params, value, state, options) {
-      if (!_.isBlockTag(value)) {
+      if (!e.isBlockTag(value)) {
         return this.createError('invalid ethereum block tag passed', {
           v: value,
         }, state, options)
@@ -40,7 +40,7 @@ const Joi = J.extend({
   }, {
     name: 'isHex',
     validate(params, value, state, options) {
-      if (!_.isHex(value)) {
+      if (!e.isHex(value)) {
         return this.createError('invalid hexadecimal passed', {
           v: value,
         }, state, options)
@@ -68,7 +68,4 @@ const JoiRpcSchemas = {
   }),
 }
 
-export {
-  Joi,
-  JoiRpcSchemas,
-}
+export default { Joi, JoiRpcSchemas }

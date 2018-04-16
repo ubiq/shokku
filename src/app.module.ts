@@ -1,15 +1,16 @@
 import AppController from '@/app.controller'
 import { routes } from '@/app.routes'
+import NetworkRepository from '@/core/networks/networks.repository'
 import BlacklistModule from '@/server/blacklist/blacklist.module'
 import JsonRpcModule from '@/server/jsonrpc/jsonrpc.module'
 import StatusModule from '@/server/status/status.module'
 import TickerModule from '@/server/ticker/ticker.module'
 import { MorganMiddleware } from '@nest-middlewares/morgan'
 import { MiddlewaresConsumer, Module, RequestMethod } from '@nestjs/common'
-import { RouterModule } from 'nest-router'
-import NetworkRepository from '@/core/providers/networks.repository'
+// import { GraphQLFactory, GraphQLModule } from '@nestjs/graphql'
+// import GraphQLServerOptions from 'apollo-server-core/dist/graphqlOptions'
 // import { graphqlExpress } from 'apollo-server-express'
-// import { GraphQLModule, GraphQLFactory } from '@nestjs/graphql'
+import { RouterModule } from 'nest-router'
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import NetworkRepository from '@/core/providers/networks.repository'
     AppController,
   ],
   components: [
-    NetworkRepository
+    NetworkRepository,
   ],
 })
 export class ApplicationModule {
@@ -34,8 +35,8 @@ export class ApplicationModule {
     // GraphQL
     // const typeDefs = this.graphQLFactory.mergeTypesByPaths('./**/*.graphql')
     // const schema = this.graphQLFactory.createSchema({ typeDefs })
-
-    // const qraphql = graphqlExpress(req => ({ schema, rootValue: req }))
+    // const schema = {}
+    // const qraphql = graphqlExpress(req => ({ rootValue: req, schema } as GraphQLServerOptions))
     // consumer
     //   .apply(qraphql)
     //   .forRoutes({ path: '/graphql', method: RequestMethod.ALL })
@@ -43,8 +44,7 @@ export class ApplicationModule {
     // Logging
     MorganMiddleware.configure('tiny')
     consumer.apply(MorganMiddleware).forRoutes({
-      path: '*', method: RequestMethod.ALL
+      path: '*', method: RequestMethod.ALL,
     })
-
   }
 }

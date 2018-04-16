@@ -5,7 +5,7 @@ import { Component } from '@nestjs/common'
 @Component()
 export default class NetworksRepository {
 
-  private readonly networks: Map<String, NetworkProvider>
+  private readonly networks: Map<string, NetworkProvider>
 
   constructor() {
     this.networks = ShokkuNetworksFactory.create()
