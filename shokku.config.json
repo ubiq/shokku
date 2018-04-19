@@ -19,14 +19,15 @@
       "subdomains": ["api"],
       "networks": ["ubiq"],
       "docker": {
-        "images": [{
+        "images": {
+          "api": {
             "name": "api",
             "folder": "api",
             "dockerfile": "Dockerfile",
             "version": "1.0.0",
             "build": "."
           },
-          {
+          "api-dev": {
             "name": "api-dev",
             "folder": "api",
             "dockerfile": "Dockerfile.dev",
@@ -34,27 +35,27 @@
             "build": ".",
             "dev": true
           },
-          {
+          "traefik": {
             "name": "traefik",
             "folder": "traefik",
             "dockerfile": "Dockerfile",
             "version": "1.0.0",
             "build": "docker/images/traefik"
           },
-          {
+          "gubiq": {
             "name": "gubiq",
             "folder": "gubiq",
             "dockerfile": "Dockerfile",
             "version": "1.0.0",
             "build": "docker/images/gubiq"
           }
-        ]
-      }
-    },
-    "indexer": {
-      "enabled": true,
-      "docker": {
-        "images": []
+        }
+      },
+      "indexer": {
+        "enabled": true,
+        "docker": {
+          "images": []
+        }
       }
     }
   }

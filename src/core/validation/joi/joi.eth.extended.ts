@@ -1,7 +1,7 @@
 import { default as J } from 'joi'
 import e from '@/core/validation/eth.fn/eth.fn'
 
-const Joi = J.extend({
+export const Joi = J.extend({
   name: 'eth',
   base: J.string().trim(),
   language: {
@@ -50,7 +50,7 @@ const Joi = J.extend({
   }],
 })
 
-const JoiRpcSchemas = {
+export const JoiRpcSchemas = {
   Filter: Joi.object().keys({
     fromBlock: [Joi.eth().isBlockTag, Joi.eth().isHex() ],
     toBlock: [Joi.eth().isBlockTag, Joi.eth().isHex() ],
@@ -67,5 +67,3 @@ const JoiRpcSchemas = {
     data: Joi.string(),
   }),
 }
-
-export default { Joi, JoiRpcSchemas }

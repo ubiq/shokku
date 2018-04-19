@@ -108,6 +108,10 @@
   version "21.1.10"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-21.1.10.tgz#dcacb5217ddf997a090cc822bba219b4b2fd7984"
 
+"@types/joi@^13.0.7":
+  version "13.0.7"
+  resolved "https://registry.yarnpkg.com/@types/joi/-/joi-13.0.7.tgz#89cd7092fc24160b9d59597270cd0d3620e709d8"
+
 "@types/lodash@^4.14.106":
   version "4.14.106"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.106.tgz#6093e9a02aa567ddecfe9afadca89e53e5dce4dd"
@@ -5896,6 +5900,10 @@ move-concurrently@^1.0.1:
     mkdirp "^0.5.1"
     rimraf "^2.5.4"
     run-queue "^1.0.3"
+
+moxios@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/moxios/-/moxios-0.4.0.tgz#fc0da2c65477d725ca6b9679d58370ed0c52f53b"
 
 ms@0.7.2:
   version "0.7.2"

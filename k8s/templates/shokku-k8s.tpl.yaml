@@ -1,0 +1,103 @@
+---
+apiVersion: apps/v1
+kind: Service
+metadata:
+  name: shokku
+  labels:
+    app: shokku
+spec:
+  ports:
+    - port: 443
+      targetPort: 443
+      nodePort: 3000
+    - port: 80
+      targetPort: 80
+      nodePort: 3000
+  selector:
+    app: shokku
+    tier: frontend
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shokku-api-deployment
+  labels:
+    app: shokku-api
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: shokku-api
+        tier: frontend
+    spec:
+      containers:
+        - name: shokku-api
+          image: {{docker.registry.remote}}/{{docker.projects.api.name}}:{{docker.projects.api.version}}
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: API_APP_ID
+              value: shokku-api
+            - name: API_PORT
+              value: 3000
+            - name: API_LOG_LEVEL
+              value: info
+          ports:
+            - name: shokku-api
+              containerPort: 3000
+---
+apiVersion: apps/v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shokku-lv-claim
+  labels:
+    app: shokku
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shokku-api-deployment
+  labels:
+    app: shokku-api
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: shokku-api
+        tier: frontend
+    spec:
+      containers:
+        - name: shokku-api
+          image: {{docker.registry.remote}}/{{docker.projects.api.name}}:{{docker.projects.api.version}}
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: API_APP_ID
+              value: shokku-api
+            - name: API_PORT
+              value: 3000
+            - name: API_LOG_LEVEL
+              value: info
+          ports:
+            - name: shokku-api
+              containerPort: 3000
+          volumeMounts:
+            - name: shokku-local-storage
+              mountPath: /usr/share/gubiq/
+      volumes:
+        - name: shokku-local-storage
+          persistentVolumeClaim:
+            claimName: shokku-lv-claim

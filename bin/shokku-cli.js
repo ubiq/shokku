@@ -5,6 +5,7 @@ const fs = require('fs')
 const $ = require('shelljs')
 const h = require('handlebars')
 const Ora = require('ora')
+const _ = require('lodash')
 
 const package = require('../package.json')
 const config = require('../shokku.config.json')
@@ -24,28 +25,52 @@ program
     ora.text = 'Reading templates from docker/templates dir...'
     ora.start()
 
-    const templatesDir = `${__dirname}/../docker/templates/`
-    const templatesFiles = fs.readdirSync(templatesDir)
+    const dockerTemplatesDir = `${__dirname}/../docker/templates/`
+    const dockerTemplatesFiles = fs.readdirSync(dockerTemplatesDir)
+    const dockerTemplates = dockerTemplatesFiles.map(f => {
+      return {
+        file: f,
+        baseDir: dockerTemplatesDir,
+        out: `${__dirname}/../out/docker`
+      }
+    })
+
+    ora.text = 'Reading templates from ks8/templates dir...'
     ora.info()
 
-    templatesFiles.forEach(f => {
-      ora.text = `Processing template file: ${f}`
+    const k8sTemplatesDir = `${__dirname}/../k8s/templates/`
+    const k8sTemplatesFiles = fs.readdirSync(k8sTemplatesDir)
+    const k8sTemplates = dockerTemplatesFiles.map(f => {
+      return {
+        file: f,
+        baseDir: k8sTemplatesDir,
+        out: `${__dirname}/../out/k8s`
+      }
+    })
 
-      const t = fs.readFileSync(templatesDir + f, 'utf-8')
+    ora.text = 'Processing templates...'
+    ora.info()
+
+    const templates = dockerTemplates.concat(k8sTemplates)
+
+    templates.forEach(t => {
+      ora.text = `Processing template file: ${t.file}`
+
+      const t = fs.readFileSync(t.baseDir + t.file, 'utf-8')
 
       ora.text = `Rendering template ${f}`
       const template = h.compile(t)
       const result = template(config)
       ora.text = 'Template rendered'
 
-      $.mkdir('-p', `${__dirname}/../out/docker`);
+      $.mkdir('-p', t.out);
 
       const name = f.replace('.tpl', '')
-      fs.writeFileSync(`${__dirname}/../out/docker/${name}`, result, {
+      fs.writeFileSync(`${t.out}/${name}`, result, {
         encoding: 'utf-8'
       })
 
-      ora.text = `Processed template ${name} saved in out/docker folder`
+      ora.text = `Processed template ${name} sucessfully and saved in ${t.out} folder`
       ora.info()
     })
   })

@@ -583,8 +583,6 @@ abstract class BaseUbiqNetworkService implements NetworkChain {
 
 class UbiqMainnetNetworkService extends BaseUbiqNetworkService {
 
-  readonly w3: Web3
-
   id() {
     return 'mainnet'
   }

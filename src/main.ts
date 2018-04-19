@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(ApplicationModule, server, {})
 
   const options = new DocumentBuilder()
-    .setTitle('SHOKKU API')
+    .setTitle('Shokku API')
     .setDescription('An open source scalable blockchain infrastructure for Ubiq, Ethereum and IPFS that runs on Kubernetes')
     .setVersion('1.0')
     .build()

@@ -3,7 +3,7 @@ import Method from 'web3-core-method'
 
 /** Override basic web3 'Method' class to allow having better params validation */
 export class Web3Method extends Method {
-  constructor(options) {
+  constructor(options: any) {
     super(options)
     super.validate = options.validate || (() => true)
     super.schema = options.schema || {}
