@@ -1,19 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing'
+import { Test } from '@nestjs/testing'
+import { expect } from 'chai'
 import AppController from './app.controller'
 
 describe('app.controller', () => {
-  let app: TestingModule
+  let controller: AppController
 
   beforeAll(async () => {
-    app = await Test.createTestingModule({
+    const app = await Test.createTestingModule({
       controllers: [AppController],
     }).compile()
+
+    controller = app.get<AppController>(AppController)
   })
 
-  describe('/', () => {
+  describe('root() method', () => {
     test('when calling root() | resp -> []', () => {
-      const controller = app.get<AppController>(AppController)
-      expect(controller.root()).toBe([])
+      expect(controller.root()).to.equals([])
     })
   })
 })

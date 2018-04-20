@@ -49,31 +49,31 @@ describe('joi.extended', () => {
 
   describe('ethereum block tag or hex validations', () => {
     it('validates properly a correct block tag: "latest"', () => {
-      const schema = Joi.eth().isBlockTagOrHex()
+      const schema = Joi.eth().isBlockTag()
       const result = Joi.validate('latest', schema)
       expect(result.error).to.be.null
     })
 
     it('validates properly a correct block tag: "pending"', () => {
-      const schema = Joi.eth().isBlockTagOrHex()
+      const schema = Joi.eth().isBlockTag()
       const result = Joi.validate('pending', schema)
       expect(result.error).to.be.null
     })
 
     it('validates properly a correct block tag: "earliest"', () => {
-      const schema = Joi.eth().isBlockTagOrHex()
+      const schema = Joi.eth().isBlockTag()
       const result = Joi.validate('earliest', schema)
       expect(result.error).to.be.null
     })
 
     it('validates properly a correct block tag: "0x1"', () => {
-      const schema = Joi.eth().isBlockTagOrHex()
+      const schema = Joi.eth().isHex()
       const result = Joi.validate('0x1', schema)
       expect(result.error).to.be.null
     })
 
-    it('validates properly a correct block tag: "0x1121afa"', () => {
-      const schema = Joi.eth().isBlockTagOrHex()
+    it('validates properly a correct hex value: "0x1121afa"', () => {
+      const schema = Joi.eth().isHex()
       const result = Joi.validate('0x1121afa', schema)
       expect(result.error).to.be.null
     })

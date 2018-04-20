@@ -1,5 +1,5 @@
 import { default as J } from 'joi'
-import e from '@/core/validation/eth.fn/eth.fn'
+import { isEthAddress, isEthTxHash, isEthBlockTag, isHex } from '@/core/validation/eth.helpers.fn/eth.fn'
 
 export const Joi = J.extend({
   name: 'eth',
@@ -10,7 +10,7 @@ export const Joi = J.extend({
   rules: [{
     name: 'isAddress',
     validate(params, value, state, options) {
-      if (!e.isAddress(value)) {
+      if (!isEthAddress(value)) {
         return this.createError('invalid ethereum address passed', {
           v: value,
         }, state, options)
@@ -20,7 +20,7 @@ export const Joi = J.extend({
   }, {
     name: 'isTxHash',
     validate(params, value, state, options) {
-      if (!e.isTxHash(value)) {
+      if (!isEthTxHash(value)) {
         return this.createError('invalid ethereum tx hash passed', {
           v: value,
         }, state, options)
@@ -30,7 +30,7 @@ export const Joi = J.extend({
   }, {
     name: 'isBlockTag',
     validate(params, value, state, options) {
-      if (!e.isBlockTag(value)) {
+      if (!isEthBlockTag(value)) {
         return this.createError('invalid ethereum block tag passed', {
           v: value,
         }, state, options)
@@ -40,7 +40,7 @@ export const Joi = J.extend({
   }, {
     name: 'isHex',
     validate(params, value, state, options) {
-      if (!e.isHex(value)) {
+      if (!isHex(value)) {
         return this.createError('invalid hexadecimal passed', {
           v: value,
         }, state, options)

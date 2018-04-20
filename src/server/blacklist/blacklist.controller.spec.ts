@@ -1,19 +1,28 @@
-import { Test, TestingModule } from '@nestjs/testing'
+import { Test } from '@nestjs/testing'
+import { expect } from 'chai'
 import BlacklistController from './blacklist.controller'
+import BlacklistService from './blacklist.service'
 
 describe('blacklist.controller', () => {
-  let app: TestingModule
+  let controller: BlacklistController
+  let service: BlacklistService
 
   beforeAll(async () => {
-    app = await Test.createTestingModule({
+    const module = await Test.createTestingModule({
       controllers: [BlacklistController],
+      components: [BlacklistService],
     }).compile()
+
+    controller = module.get<BlacklistController>(BlacklistController)
+    service = module.get<BlacklistService>(BlacklistService)
   })
 
-  describe('/blacklist', () => {
-    test('when calling root() | resp -> []', () => {
-      const controller = app.get<BlacklistController>(BlacklistController)
-      expect(controller.root()).toBe([])
+  describe('root() method', () => {
+    test('when calling root() | resp -> {}', () => {
+      // Fake response from service
+      jest.spyOn(service, 'blacklist').mockImplementation(() => {})
+
+      expect(controller.root()).to.equals({})
     })
   })
 })

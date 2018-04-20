@@ -1,5 +1,5 @@
 ---
-apiVersion: apps/v1
+apiVersion: v1
 kind: Service
 metadata:
   name: shokku
@@ -50,7 +50,7 @@ spec:
             - name: shokku-api
               containerPort: 3000
 ---
-apiVersion: apps/v1
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: shokku-lv-claim

@@ -46,8 +46,9 @@
     "swagger-ui-express": "^3.0.6",
     "typescript": "^2.8.1",
     "web3": "^1.0.0-beta.33",
-    "web3-core-helpers": "^1.0.0-beta.33",
-    "web3-core-method": "^1.0.0-beta.33"
+    "web3-core-helpers": "^1.0.0-beta.34",
+    "web3-core-method": "^1.0.0-beta.34",
+    "web3-utils": "^1.0.0-beta.34"
   },
   "devDependencies": {
     "@types/express": "^4.0.39",
@@ -73,7 +74,6 @@
     "ts-node": "^4.1.0",
     "tsconfig-paths": "^3.1.1",
     "tslint": "5.3.2",
-    "web3-utils": "^1.0.0-beta.33",
     "webpack": "^4.5.0",
     "webpack-cli": "^2.0.14"
   },

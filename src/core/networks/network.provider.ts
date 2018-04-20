@@ -2,7 +2,7 @@ import { Component } from '@nestjs/common'
 import Web3 from 'web3'
 
 export interface NetworkProviderFactory {
-  create(options: object): NetworkProvider
+  create(options?: object): NetworkProvider
 }
 
 export class NetworkProvider {
@@ -11,6 +11,7 @@ export class NetworkProvider {
 
 export interface NetworkChain {
   id(): string
+  blacklistedDomains()
   exchangeSupportedTickers(): Array<string>
   validRpcMethods(options?: any)
 }
