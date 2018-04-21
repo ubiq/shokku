@@ -1,5 +1,5 @@
 import { Component } from '@nestjs/common'
-import NetworksRepository from 'core/networks/networks.repository'
+import NetworksRepository from '@/core/networks/networks.repository'
 
 @Component()
 export default class BlacklistService {

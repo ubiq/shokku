@@ -6,7 +6,7 @@ export default class ShokkuNetworksFactory {
     const networks = new Map<string, NetworkProvider>()
 
     // Ubiq
-    const ubiq = new UbiqNetworksProviderFactory().create({})
+    const ubiq = new UbiqNetworksProviderFactory().create()
     networks.set(ubiq.id, ubiq)
 
     return networks

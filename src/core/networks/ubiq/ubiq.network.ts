@@ -4,7 +4,8 @@ import _ from 'lodash'
 import { isEthAddress, isEthBlockTag, isEthNonce, isEthTxHash, isHex, toBoolean } from '@/core/validation/eth.helpers.fn/eth.fn'
 import { Web3Method } from '@/core/web3/web3.shokku'
 import Web3 from 'web3'
-import config from '@/core/networks/ubiq/ubiq.network.config.json'
+
+const metadata = require('./ubiq.network.json')
 
 const WEB3_VALID_RPC_METHODS = [
   new Web3Method({
@@ -462,11 +463,11 @@ const WEB3_VALID_RPC_METHODS = [
 ]
 
 const createWeb3Provider = () => {
-  const provider = new Web3.providers.HttpProvider(config.default_client_url)
+  const provider = new Web3.providers.HttpProvider(metadata.default_client_url)
   const w3 = new Web3(provider)
   w3.extend({
     property: 'safe',
-    methods: config.supported_rpc_methods,
+    methods: metadata.supported_rpc_methods,
   })
   return w3
 }
@@ -483,16 +484,16 @@ abstract class BaseUbiqNetworkService implements NetworkChain {
     return ''
   }
 
-  blacklistedDomains() {
-    throw new Error("Method not implemented.")
+  blacklistedDomains(): string[] {
+    return metadata.blacklist
   }
 
   exchangeSupportedTickers(): string[] {
-    return config.exchange_tickers
+    return metadata.exchange_tickers
   }
 
   validRpcMethods(options?: any) {
-    return options.formatted ? VALID_RPC_METHODS_RESPONSE : VALID_RPC_METHODS
+    return options.formatted ? metadata.supported_rpc_methods_as_request : metadata.supported_rpc_methods
   }
 }
 

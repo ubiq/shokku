@@ -12,8 +12,8 @@
     "build:clean": "rm -rf dist",
     "build:prod": "webpack --mode=production --env.prod",
     "test:run": "jest",
-    "test:cov": "jest --coverage",
     "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test:cov": "jest --coverage",
     "format": "prettier --write \"**/*.ts\"",
     "lint": "tslint --config tslint.json --project .",
     "shokku-cli": "node ./bin/shokku-cli.js"

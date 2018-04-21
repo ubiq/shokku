@@ -52,8 +52,8 @@ export const Joi = J.extend({
 
 export const JoiRpcSchemas = {
   Filter: Joi.object().keys({
-    fromBlock: [Joi.eth().isBlockTag, Joi.eth().isHex() ],
-    toBlock: [Joi.eth().isBlockTag, Joi.eth().isHex() ],
+    fromBlock: [Joi.eth().isBlockTag(), Joi.eth().isHex()],
+    toBlock: [Joi.eth().isBlockTag(), Joi.eth().isHex()],
     address: [Joi.eth().isAddress(), Joi.array().items(Joi.eth().isAddress())],
     topics: Joi.array().items(Joi.eth().isTxHash(), Joi.allow(null)),
   }),

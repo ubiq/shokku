@@ -11,7 +11,7 @@ export class NetworkProvider {
 
 export interface NetworkChain {
   id(): string
-  blacklistedDomains()
+  blacklistedDomains(): Array<string>
   exchangeSupportedTickers(): Array<string>
   validRpcMethods(options?: any)
 }

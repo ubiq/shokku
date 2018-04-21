@@ -9,7 +9,7 @@ export default class BlacklistController {
   @Get()
   async root() {
     try {
-      return await this.blacklistService.blacklist()
+      return await this.blacklistService.blacklist('', '')
     } catch (error) {
       throw new HttpException('Can\'t retrieve blacklist resource from Github. Please, try again later.', HttpStatus.BAD_GATEWAY)
     }

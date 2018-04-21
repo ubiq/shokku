@@ -1,10 +1,5 @@
-import chai from 'chai'
-import {
-  Joi,
-  JoiRpcSchemas
-} from './joi.eth.extended'
-
-const expect = chai.expect
+import { expect } from 'chai'
+import { Joi, JoiRpcSchemas } from './joi.eth.extended'
 
 describe('joi.extended', () => {
   describe('ethereum address validations', () => {
