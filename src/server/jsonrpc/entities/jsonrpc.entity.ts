@@ -1,7 +1,7 @@
 import { IsString, IsInt, IsPositive, IsNumberString, Contains, IsArray } from 'class-validator'
-import { IsRpcMethod } from '@/core/decorators/shokku.decorators'
+import { IsRpcMethod } from '@/core/decorators/decorators'
 
-export default class JsonRpcModel {
+export default class JsonRpcEntity {
   @IsInt()
   @IsPositive()
   readonly id?: number

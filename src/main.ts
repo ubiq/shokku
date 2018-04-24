@@ -3,7 +3,6 @@ import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as express from 'express'
 import * as SwaggerUI from 'swagger-ui-express'
-import * as reflect from 'reflect-metadata'
 
 async function bootstrap() {
   const server = express()
@@ -11,7 +10,7 @@ async function bootstrap() {
 
   const options = new DocumentBuilder()
     .setTitle('Shokku API')
-    .setDescription('An open source scalable blockchain infrastructure for Ubiq, Ethereum and IPFS that runs on Kubernetes')
+    .setDescription('An open source scalable blockchain infrastructure for Ubiq, Ethereum, POA and IPFS that runs on Kubernetes')
     .setVersion('1.0')
     .build()
 

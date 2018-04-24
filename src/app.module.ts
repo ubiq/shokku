@@ -1,6 +1,6 @@
 import AppController from '@/app.controller'
 import { routes } from '@/app.routes'
-import NetworkRepository from '@/core/networks/networks.repository'
+import { NetworksRepository } from '@/networks/networks'
 import BlacklistModule from '@/server/blacklist/blacklist.module'
 import JsonRpcModule from '@/server/jsonrpc/jsonrpc.module'
 import StatusModule from '@/server/status/status.module'
@@ -25,7 +25,7 @@ import { RouterModule } from 'nest-router'
     AppController,
   ],
   components: [
-    NetworkRepository,
+    NetworksRepository,
   ],
 })
 export class ApplicationModule {

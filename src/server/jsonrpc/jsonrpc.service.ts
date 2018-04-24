@@ -1,6 +1,7 @@
 import { Component } from '@nestjs/common'
-import JsonRpcModel from '@/server/jsonrpc/models/jsonrpc.model'
-import NetworksRepository from '@/core/networks/networks.repository'
+import JsonRpcEntity from '@/server/jsonrpc/entities/jsonrpc.entity'
+import { NetworksRepository } from '@/networks/networks'
+import { NetworkChainRequestEntity } from '@/core/entities/network.chain.request.entity'
 
 @Component()
 export default class JsonRpcService {
@@ -11,19 +12,19 @@ export default class JsonRpcService {
     return { networks }
   }
 
-  chains(network: string): object {
-    const n = this.repository.get(network)
-    const chains = Array.from(n.networks.keys())
-    return { chains }
+  chains(entity: NetworkChainRequestEntity<any>): object {
+    // const n = this.repository.get(network)
+    // const chains = Array.from(n.networks.keys())
+    // return { chains }
+    return {}
   }
 
-  methods(network: string): object {
-    const n = this.repository.get(network)
-
-    return
+  methods(entity: NetworkChainRequestEntity<any>): object {
+    // const n = this.repository.get(network)
+    return {}
   }
 
-  rpcMethod(network: string, model: JsonRpcModel): object {
+  rpcMethod(entity: NetworkChainRequestEntity<JsonRpcEntity>): object {
     throw new Error('Method not implemented.')
   }
 

@@ -1,5 +1,5 @@
-import { Get, Param, Controller, HttpStatus, HttpException } from '@nestjs/common'
 import TickerService from '@/server/ticker/ticker.service'
+import { Controller, Get, HttpException, HttpStatus, Param } from '@nestjs/common'
 
 @Controller('ticker')
 export default class TickerController {

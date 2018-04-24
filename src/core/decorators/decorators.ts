@@ -1,5 +1,5 @@
+import { ValidationArguments, registerDecorator } from 'class-validator'
 import _ from 'lodash'
-import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator'
 
 export function IsRpcMethod() {
   return (object: object, propertyName: string) => {

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { IsRpcMethod } from './shokku.decorators'
+import { IsRpcMethod } from './decorators'
 import { expect } from 'chai'
 
 describe('shokku.decorators', () => {
