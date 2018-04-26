@@ -2,7 +2,7 @@ import { isEthAddress, isEthBlockTag, isEthNonce, isEthTxHash, isHex, toBoolean 
 import { Joi, JoiRpcSchemas } from '@/core/validation/joi/joi.eth.extended'
 import _ from 'lodash'
 import { errors } from 'web3-core-helpers'
-import Method from 'web3-core-method'
+import * as Method from 'web3-core-method'
 
 /** Override basic web3 'Method' class to allow having better params validation */
 export class Web3Method extends Method {

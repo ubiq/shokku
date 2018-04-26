@@ -1,5 +1,5 @@
 import { Component } from '@nestjs/common'
-import JsonRpcEntity from '@/server/jsonrpc/entities/jsonrpc.entity'
+import JsonRpcEntity from '@/server/jsonrpc/jsonrpc.entity'
 import { NetworksRepository } from '@/networks/networks'
 import { NetworkChainRequestEntity } from '@/core/entities/network.chain.request.entity'
 

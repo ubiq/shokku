@@ -9,11 +9,25 @@ export interface NetworkChain {
   id(): string
   blacklistedDomains(): string[]
   exchangeSupportedTickers(): string[]
-  validRpcMethods(options?: any)
+  validRpcMethods(options?: RpcMethodsOptions)
 }
 
 export class RpcMethodsOptions {
   readonly formatted?: boolean = true
+}
+
+export class NetworkProviderNotFound extends Error {
+  constructor(...args) {
+    super(...args)
+    Error.captureStackTrace(this, NetworkProviderNotFound)
+  }
+}
+
+export class NetworkChainNotFound extends Error {
+  constructor(...args) {
+    super(...args)
+    Error.captureStackTrace(this, NetworkChainNotFound)
+  }
 }
 
 @Component()
@@ -25,22 +39,24 @@ export class NetworksRepository {
     this.networks = ShokkuNetworksFactory.create()
   }
 
-  get(id: string): NetworkProvider {
-    const provider = this.networks[id]
+  getNetworkProvider(networkId: string): NetworkProvider {
+    const provider = this.networks.get(networkId)
     if (!provider) {
-      throw new NetworkProviderNotFound('${id} is not a valid network provider')
+      throw new NetworkProviderNotFound(`${networkId} is not a valid network provider`)
     }
     return provider
   }
 
-  getAll(): NetworkProvider[] {
-    return Array.from(this.networks.values())
+  getNetworkChain(networkId: string, chainId: string): NetworkChain {
+    const provider = this.getNetworkProvider(networkId)
+    const chain = provider.networks.get(chainId)
+    if (!chain) {
+      throw new NetworkChainNotFound(`${chainId} is not a valid network chain`)
+    }
+    return chain
   }
-}
 
-export class NetworkProviderNotFound extends Error {
-  constructor(...args) {
-    super(...args)
-    Error.captureStackTrace(this, NetworkProviderNotFound)
+  getAllNetworkProviders(): NetworkProvider[] {
+    return Array.from(this.networks.values())
   }
 }

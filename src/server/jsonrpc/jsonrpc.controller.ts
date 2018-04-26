@@ -1,7 +1,9 @@
+import { NetworkChain } from '@/core/decorators/decorators'
+import { NetworkChainRequestEntity } from '@/core/entities/network.chain.request.entity'
+import { NetworkChainValidatorPipe } from '@/core/pipes/network.chain.validator.pipe'
+import JsonRpcEntity from '@/server/jsonrpc/jsonrpc.entity'
 import JsonRpcService from '@/server/jsonrpc/jsonrpc.service'
-import JsonRpcEntity from '@/server/jsonrpc/entities/jsonrpc.entity'
-import JsonRpcPipe from '@/server/jsonrpc/pipes/jsonrpc.validation.pipe'
-import { Body, Controller, Get, Param, Post, UsePipes } from '@nestjs/common'
+import { Controller, Get, Param, Post, UsePipes } from '@nestjs/common'
 
 @Controller('jsonrpc')
 export default class JsonRpcController {
@@ -24,19 +26,20 @@ export default class JsonRpcController {
   }
 
   @Get(':network/:chain/:method')
-  @UsePipes(new JsonRpcPipe())
-  getMethod(@Param() params, entity: JsonRpcEntity) {
+  @UsePipes(new NetworkChainValidatorPipe())
+  getMethod(@NetworkChain() entity: NetworkChainRequestEntity<JsonRpcEntity>) {
     try {
-      return this.jsonRpcService.rpcMethod(params.network, entity)
+      return this.jsonRpcService.rpcMethod(entity)
     } catch (err) {
       this.toHttpException(err)
     }
   }
 
   @Post(':network/:chain')
-  postMethod(@Param() params, @Body(new JsonRpcPipe()) entity: JsonRpcEntity) {
+  @UsePipes(new NetworkChainValidatorPipe())
+  postMethod(@NetworkChain() entity: NetworkChainRequestEntity<JsonRpcEntity>) {
     try {
-      return this.jsonRpcService.rpcMethod(params.network, entity)
+      return this.jsonRpcService.rpcMethod(entity)
     } catch (err) {
       this.toHttpException(err)
     }

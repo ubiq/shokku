@@ -1,14 +1,15 @@
-import { Component } from '@nestjs/common'
+import { NetworkChainRequestEntity } from '@/core/entities/network.chain.request.entity'
 import { NetworksRepository } from '@/networks/networks'
+import { Component } from '@nestjs/common'
 
 @Component()
 export default class BlacklistService {
   constructor(private readonly networksRepository: NetworksRepository) { }
 
-  async blacklist(networkId: string, chainId: string) {
-    const network = this.networksRepository.get(networkId).networks.get(chainId)
+  async blacklist(entity: NetworkChainRequestEntity<any>) {
+    const chain = this.networksRepository.getNetworkChain(entity.network, entity.chain)
     return {
-      blacklist: network.blacklistedDomains()
+      blacklist: chain.blacklistedDomains()
     }
   }
 }

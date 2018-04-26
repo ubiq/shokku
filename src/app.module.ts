@@ -3,21 +3,20 @@ import { routes } from '@/app.routes'
 import { NetworksRepository } from '@/networks/networks'
 import BlacklistModule from '@/server/blacklist/blacklist.module'
 import JsonRpcModule from '@/server/jsonrpc/jsonrpc.module'
-import StatusModule from '@/server/status/status.module'
 import TickerModule from '@/server/ticker/ticker.module'
 import { MorganMiddleware } from '@nest-middlewares/morgan'
-import { MiddlewaresConsumer, Module, RequestMethod } from '@nestjs/common'
+import { MiddlewaresConsumer, Module, RequestMethod, Global } from '@nestjs/common'
 // import { GraphQLFactory, GraphQLModule } from '@nestjs/graphql'
 // import GraphQLServerOptions from 'apollo-server-core/dist/graphqlOptions'
 // import { graphqlExpress } from 'apollo-server-express'
 import { RouterModule } from 'nest-router'
 
+@Global()
 @Module({
   imports: [
     RouterModule.forRoutes(routes),
     BlacklistModule,
     JsonRpcModule,
-    StatusModule,
     TickerModule,
     // GraphQLModule
   ],
@@ -25,8 +24,11 @@ import { RouterModule } from 'nest-router'
     AppController,
   ],
   components: [
-    NetworksRepository,
+    NetworksRepository
   ],
+  exports: [
+    NetworksRepository
+  ]
 })
 export class ApplicationModule {
   // constructor(private readonly graphQLFactory: GraphQLFactory) {}

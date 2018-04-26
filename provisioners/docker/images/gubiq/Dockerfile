@@ -7,7 +7,7 @@ WORKDIR /gubiq
 
 RUN apk add --no-cache openssl dcron
 
-RUN mkdir -p /var/log/cron && mkdir -m 0644 -p /var/spool/cron/crontabs && \ 
+RUN mkdir -p /var/log/cron && mkdir -m 0644 -p /var/spool/cron/crontabs && \
     touch /var/log/cron/cron.log && mkdir -m 0644 -p /etc/cron.d
 
 # Install dockerize
@@ -31,35 +31,12 @@ RUN mkdir -p /var/log/supervisord
 
 COPY ./supervisord.tmpl.conf .
 
-# Install s3cmd
-
-ENV S3CMD_VERSION 1.6.1
-
-RUN wget https://github.com/s3tools/s3cmd/releases/download/v${S3CMD_VERSION}/s3cmd-${S3CMD_VERSION}.tar.gz && \
-  tar xzf s3cmd-${S3CMD_VERSION}.tar.gz && \
-  rm s3cmd-${S3CMD_VERSION}.tar.gz && \
-  cd s3cmd-${S3CMD_VERSION} && \
-  python setup.py install && \
-  mv s3cmd /usr/local/bin && \
-  chmod +x /usr/local/bin/s3cmd && \ 
-  cd .. && \
-  rm -rf /var/cache/apk/* /tmp/s3cmd-${S3CMD_VERSION} /tmp/s3cmd-${S3CMD_VERSION}.tar.gz s3cmd-${S3CMD_VERSION} && \
-  mkdir -p /etc/s3cmd/
-
-COPY ./s3cfg /etc/s3cmd/s3cfg
-
 # Copy scripts
 COPY ./entrypoint.sh /usr/local/bin/
 COPY ./start-gubiq.sh /usr/local/bin/
-COPY ./env-secrets-expand.sh /usr/local/bin/
-COPY ./backup.sh /usr/local/bin/
-COPY ./recover-blockchain.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/start-gubiq.sh
-RUN chmod +x /usr/local/bin/env-secrets-expand.sh
-RUN chmod +x /usr/local/bin/backup.sh
-RUN chmod +x /usr/local/bin/recover-blockchain.sh
 
 EXPOSE 8588
 
