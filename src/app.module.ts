@@ -1,6 +1,6 @@
 import AppController from '@/app.controller'
 import { routes } from '@/app.routes'
-import { NetworksRepository } from '@/networks/networks'
+import { NetworksRepository } from '@/networks'
 import BlacklistModule from '@/server/blacklist/blacklist.module'
 import JsonRpcModule from '@/server/jsonrpc/jsonrpc.module'
 import TickerModule from '@/server/ticker/ticker.module'

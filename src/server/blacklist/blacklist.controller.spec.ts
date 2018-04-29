@@ -1,5 +1,7 @@
 import { Test } from '@nestjs/testing'
 import { expect } from 'chai'
+import { NetworkChainRequestEntity } from '../../core/entities/network-chain-request.entity'
+import { NetworksRepository } from '../../networks/networks'
 import BlacklistController from './blacklist.controller'
 import BlacklistService from './blacklist.service'
 
@@ -10,7 +12,7 @@ describe('blacklist.controller', () => {
   beforeAll(async () => {
     const module = await Test.createTestingModule({
       controllers: [BlacklistController],
-      components: [BlacklistService],
+      components: [NetworksRepository, BlacklistService]
     }).compile()
 
     controller = module.get<BlacklistController>(BlacklistController)
@@ -20,9 +22,17 @@ describe('blacklist.controller', () => {
   describe('root() method', () => {
     test('when calling root() | resp -> {}', () => {
       // Fake response from service
-      jest.spyOn(service, 'blacklist').mockImplementation(() => {})
+      jest.spyOn(service, 'blacklist').mockImplementation(() => {
+        blacklist: []
+      })
 
-      expect(controller.root()).to.equals({})
+      // Fake NetworkChainRequest
+      const req = new NetworkChainRequestEntity<any>('ubiq', 'mainnet')
+
+      // Call controller
+      const result = controller.root(req)
+
+      expect(result).to.equals({ blacklist: [] })
     })
   })
 })

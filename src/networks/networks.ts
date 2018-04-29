@@ -1,5 +1,5 @@
-import ShokkuNetworksFactory from '@/networks/shokku-networks.factory'
 import { Component } from '@nestjs/common'
+import { UbiqNetworksProviderFactory } from '@/networks/ubiq'
 
 export class NetworkProvider {
   constructor(readonly id: string, readonly networks: Map<string, NetworkChain>) {}
@@ -27,6 +27,18 @@ export class NetworkChainNotFound extends Error {
   constructor(...args) {
     super(...args)
     Error.captureStackTrace(this, NetworkChainNotFound)
+  }
+}
+
+export class ShokkuNetworksFactory {
+  static create(): Map<string, NetworkProvider> {
+    const networks = new Map<string, NetworkProvider>()
+
+    // Ubiq
+    const ubiq = UbiqNetworksProviderFactory.create()
+    networks.set(ubiq.id, ubiq)
+
+    return networks
   }
 }
 

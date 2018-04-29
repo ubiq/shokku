@@ -1,6 +1,6 @@
 import { NetworkChain, NetworkProvider } from '@/networks/networks'
 import { WEB3_SUPPORTED_RPC_METHODS } from '@/core/web3'
-import * as Web3 from 'web3'
+const Web3 = require('web3') // tslint:disable-line
 
 const metadata = require('./ubiq.metadata.json')
 

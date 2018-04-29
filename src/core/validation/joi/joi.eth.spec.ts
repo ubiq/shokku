@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { Joi, JoiRpcSchemas } from './joi.eth.extended'
+import { Joi, JoiRpcSchemas } from './joi.eth'
 
 describe('joi.extended', () => {
   describe('ethereum address validations', () => {

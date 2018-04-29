@@ -1,7 +1,7 @@
-import { Component } from '@nestjs/common'
-import JsonRpcEntity from '@/server/jsonrpc/jsonrpc.entity'
+import { NetworkChainRequestEntity } from '@/core/entities'
 import { NetworksRepository } from '@/networks/networks'
-import { NetworkChainRequestEntity } from '@/core/entities/network.chain.request.entity'
+import JsonRpcEntity from '@/server/jsonrpc/jsonrpc.entity'
+import { Component } from '@nestjs/common'
 
 @Component()
 export default class JsonRpcService {

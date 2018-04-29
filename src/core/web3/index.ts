@@ -1,1 +1,1 @@
-export * from '@/core/web3/web3.shokku'
+export * from '@/core/web3/web3.extensions'

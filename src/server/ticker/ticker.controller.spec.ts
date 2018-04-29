@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import TickerController from './ticker.controller'
 
-describe('blacklist.controller', () => {
+describe('ticker.controller', () => {
   let app: TestingModule
 
   beforeAll(async () => {
