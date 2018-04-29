@@ -1,5 +1,5 @@
 import { NetworkProvider } from '@/networks/networks'
-import { UbiqNetworksProviderFactory } from '@/networks/ubiq/ubiq.network'
+import { UbiqNetworksProviderFactory } from '@/networks/ubiq'
 
 export default class ShokkuNetworksFactory {
   static create(): Map<string, NetworkProvider> {

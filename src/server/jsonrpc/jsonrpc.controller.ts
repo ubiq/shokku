@@ -1,9 +1,9 @@
-import { NetworkChain } from '@/core/decorators/decorators'
-import { NetworkChainRequestEntity } from '@/core/entities/network.chain.request.entity'
-import { NetworkChainValidatorPipe } from '@/core/pipes/network.chain.validator.pipe'
+import { NetworkChain } from '@/core/decorators'
+import { NetworkChainRequestEntity } from '@/core/entities'
+import { NetworkChainValidatorPipe } from '@/core/pipes'
 import JsonRpcEntity from '@/server/jsonrpc/jsonrpc.entity'
 import JsonRpcService from '@/server/jsonrpc/jsonrpc.service'
-import { Controller, Get, Param, Post, UsePipes } from '@nestjs/common'
+import { Controller, Get, Post, UsePipes } from '@nestjs/common'
 
 @Controller('jsonrpc')
 export default class JsonRpcController {
@@ -16,30 +16,28 @@ export default class JsonRpcController {
   }
 
   @Get(':network/chains')
-  chains(@Param() params) {
-    return this.jsonRpcService.chains(params.network)
+  chains(@NetworkChain() req: NetworkChainRequestEntity<JsonRpcEntity>) {
+    return this.jsonRpcService.chains(req)
   }
 
   @Get(':network/:chain/methods')
-  methods(@Param() params) {
-    return this.jsonRpcService.methods(params.network)
+  methods(@NetworkChain() req: NetworkChainRequestEntity<JsonRpcEntity>) {
+    return this.jsonRpcService.methods(req)
   }
 
   @Get(':network/:chain/:method')
-  @UsePipes(new NetworkChainValidatorPipe())
-  getMethod(@NetworkChain() entity: NetworkChainRequestEntity<JsonRpcEntity>) {
+  getMethod(@NetworkChain() req: NetworkChainRequestEntity<JsonRpcEntity>) {
     try {
-      return this.jsonRpcService.rpcMethod(entity)
+      return this.jsonRpcService.rpcMethod(req)
     } catch (err) {
       this.toHttpException(err)
     }
   }
 
   @Post(':network/:chain')
-  @UsePipes(new NetworkChainValidatorPipe())
-  postMethod(@NetworkChain() entity: NetworkChainRequestEntity<JsonRpcEntity>) {
+  postMethod(@NetworkChain() req: NetworkChainRequestEntity<JsonRpcEntity>) {
     try {
-      return this.jsonRpcService.rpcMethod(entity)
+      return this.jsonRpcService.rpcMethod(req)
     } catch (err) {
       this.toHttpException(err)
     }

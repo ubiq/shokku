@@ -1,5 +1,5 @@
-import { isEthAddress, isEthBlockTag, isEthNonce, isEthTxHash, isHex, toBoolean } from '@/core/validation/eth.helpers.fn/eth.fn'
-import { Joi, JoiRpcSchemas } from '@/core/validation/joi/joi.eth.extended'
+import { isEthAddress, isEthBlockTag, isEthNonce, isEthTxHash, isHex, toBoolean } from '@/core/validation/eth.helpers'
+import { Joi, JoiRpcSchemas } from '@/core/validation/joi'
 import _ from 'lodash'
 import { errors } from 'web3-core-helpers'
 import * as Method from 'web3-core-method'
@@ -31,7 +31,7 @@ export class Web3Method extends Method {
   }
 }
 
-export const WEB3_RPC_METHODS = [
+export const WEB3_SUPPORTED_RPC_METHODS = [
   new Web3Method({
     name: 'web3_clientVersion',
     call: 'web3_clientVersion',

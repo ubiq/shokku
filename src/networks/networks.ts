@@ -1,4 +1,4 @@
-import ShokkuNetworksFactory from '@/networks/shokku.networks.factory'
+import ShokkuNetworksFactory from '@/networks/shokku-networks.factory'
 import { Component } from '@nestjs/common'
 
 export class NetworkProvider {
@@ -32,7 +32,6 @@ export class NetworkChainNotFound extends Error {
 
 @Component()
 export class NetworksRepository {
-
   private readonly networks: Map<string, NetworkProvider>
 
   constructor() {
@@ -54,6 +53,14 @@ export class NetworksRepository {
       throw new NetworkChainNotFound(`${chainId} is not a valid network chain`)
     }
     return chain
+  }
+
+  hasNetworkChain(networkId: string, chainId: string): boolean {
+    try {
+      return this.getNetworkChain(networkId, chainId) != null
+    } catch (error) {
+      return false
+    }
   }
 
   getAllNetworkProviders(): NetworkProvider[] {

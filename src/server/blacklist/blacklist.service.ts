@@ -1,4 +1,4 @@
-import { NetworkChainRequestEntity } from '@/core/entities/network.chain.request.entity'
+import { NetworkChainRequestEntity } from '@/core/entities'
 import { NetworksRepository } from '@/networks/networks'
 import { Component } from '@nestjs/common'
 

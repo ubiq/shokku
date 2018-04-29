@@ -8,7 +8,7 @@ export default class JsonRpcService {
   constructor(private readonly repository: NetworksRepository) { }
 
   networks(): object {
-    const networks = this.repository.getAll().map(p => p.id)
+    const networks = this.repository.getAllNetworkProviders().map(p => p.id)
     return { networks }
   }
 

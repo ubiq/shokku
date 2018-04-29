@@ -5,10 +5,12 @@ import BlacklistModule from '@/server/blacklist/blacklist.module'
 import JsonRpcModule from '@/server/jsonrpc/jsonrpc.module'
 import TickerModule from '@/server/ticker/ticker.module'
 import { MorganMiddleware } from '@nest-middlewares/morgan'
-import { MiddlewaresConsumer, Module, RequestMethod, Global } from '@nestjs/common'
-// import { GraphQLFactory, GraphQLModule } from '@nestjs/graphql'
-// import GraphQLServerOptions from 'apollo-server-core/dist/graphqlOptions'
-// import { graphqlExpress } from 'apollo-server-express'
+import { Global, MiddlewaresConsumer, Module, RequestMethod } from '@nestjs/common'
+import { GraphQLFactory, GraphQLModule } from '@nestjs/graphql'
+import GraphQLServerOptions from 'apollo-server-core/dist/graphqlOptions'
+import { graphiqlExpress, graphqlExpress } from 'apollo-server-express'
+import { GraphiQLData } from 'apollo-server-module-graphiql'
+import { graphql } from 'graphql'
 import { RouterModule } from 'nest-router'
 
 @Global()
@@ -18,35 +20,40 @@ import { RouterModule } from 'nest-router'
     BlacklistModule,
     JsonRpcModule,
     TickerModule,
-    // GraphQLModule
+    GraphQLModule
+  ],
+  exports: [
+    NetworksRepository
   ],
   controllers: [
     AppController,
   ],
   components: [
     NetworksRepository
-  ],
-  exports: [
-    NetworksRepository
   ]
 })
 export class ApplicationModule {
-  // constructor(private readonly graphQLFactory: GraphQLFactory) {}
+  constructor(private readonly graphQLFactory: GraphQLFactory) {}
 
   configure(consumer: MiddlewaresConsumer): void {
     // GraphQL
-    // const typeDefs = this.graphQLFactory.mergeTypesByPaths('./**/*.graphql')
-    // const schema = this.graphQLFactory.createSchema({ typeDefs })
-    // const schema = {}
-    // const qraphql = graphqlExpress(req => ({ rootValue: req, schema } as GraphQLServerOptions))
-    // consumer
-    //   .apply(qraphql)
-    //   .forRoutes({ path: '/graphql', method: RequestMethod.ALL })
+    const typeDefs = this.graphQLFactory.mergeTypesByPaths('./**/*.graphql')
+    const schema = this.graphQLFactory.createSchema({ typeDefs })
+    const qraphql = graphqlExpress(req => ({ rootValue: req, schema } as GraphQLServerOptions))
+    consumer
+      .apply(qraphql)
+      .forRoutes({ path: '/graphql', method: RequestMethod.ALL })
 
-    // Logging
+    // GraphiQL
+    graphiqlExpress(req => ({ endpointURL: '/graphiql' } as GraphiQLData))
+    consumer
+      .apply(graphql)
+      .forRoutes({ path: '/graphiql', method: RequestMethod.ALL })
+
+    // Morgan
     MorganMiddleware.configure('tiny')
-    consumer.apply(MorganMiddleware).forRoutes({
-      path: '*', method: RequestMethod.ALL,
-    })
+    consumer
+      .apply(MorganMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL })
   }
 }

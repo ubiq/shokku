@@ -10,7 +10,7 @@ describe('shokku.networks.factory', () => {
 
   describe('create() method', () => {
     it('should return a complete list of registered NetworksProviders', () => {
-      const networksProviders = repository.getAll()
+      const networksProviders = repository.getAllNetworkProviders()
       expect(networksProviders).to.be.an('array').to.have.lengthOf(1)
     })
   })

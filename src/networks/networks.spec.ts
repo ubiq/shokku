@@ -11,19 +11,19 @@ describe('networks', () => {
 
     describe('getAll() method', () => {
       it('should return create a complete list of registered NetworksProviders', () => {
-        const networksProviders = repository.getAll()
+        const networksProviders = repository.getAllNetworkProviders()
         expect(networksProviders).to.be.an('array').to.have.lengthOf(1)
       })
     })
 
     describe('get(id) method', () => {
       it('it should return a concrete NetworkProvider by id', () => {
-        const networkProvider = repository.get('ubiq')
+        const networkProvider = repository.getNetworkProvider('ubiq')
         expect(networkProvider).to.exist
       })
 
       it('it should not return concrete NetworkProvider by id if is not registered', () => {
-        const networkProvider = repository.get('')
+        const networkProvider = repository.getNetworkProvider('')
         expect(networkProvider).to.be.undefined
       })
     })

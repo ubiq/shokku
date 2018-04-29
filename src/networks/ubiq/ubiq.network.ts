@@ -1,5 +1,5 @@
 import { NetworkChain, NetworkProvider } from '@/networks/networks'
-import { WEB3_RPC_METHODS } from '@/core/web3/web3.shokku'
+import { WEB3_SUPPORTED_RPC_METHODS } from '@/core/web3'
 import * as Web3 from 'web3'
 
 const metadata = require('./ubiq.metadata.json')
@@ -9,7 +9,7 @@ const createWeb3Provider = () => {
   const w3 = new Web3(provider)
   w3.extend({
     property: 'safe',
-    methods: WEB3_RPC_METHODS,
+    methods: WEB3_SUPPORTED_RPC_METHODS,
   })
   return w3
 }

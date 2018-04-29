@@ -1,5 +1,5 @@
 import * as J from 'joi'
-import { isEthAddress, isEthTxHash, isEthBlockTag, isHex } from '@/core/validation/eth.helpers.fn/eth.fn'
+import { isEthAddress, isEthTxHash, isEthBlockTag, isHex } from '@/core/validation/eth.helpers'
 
 export const Joi = J.extend({
   name: 'eth',
