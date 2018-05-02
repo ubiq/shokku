@@ -1,0 +1,7 @@
+type Query {
+  ticker: [Ticker]
+}
+
+type Ticer {
+  id: Int!
+}

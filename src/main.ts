@@ -4,8 +4,8 @@ import { NetworkChainValidatorPipe } from '@/core/pipes'
 import { NestFactory } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import * as express from 'express'
+import { NetworksRepository } from 'networks'
 import * as SwaggerUI from 'swagger-ui-express'
-import { NetworksRepository } from 'networks';
 
 async function bootstrap() {
   const server = express()

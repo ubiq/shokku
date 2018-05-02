@@ -1,5 +1,6 @@
 import { NetworkChainRequestEntity } from '@/core/entities'
-import { HttpException, HttpStatus, createRouteParamDecorator } from '@nestjs/common'
+import { HttpNetworkChainNotFoundException } from '@/core/exceptions'
+import { createRouteParamDecorator } from '@nestjs/common'
 
 const NETWORK_CHAIN_REGEX = /^\/(\w+)\/(\w+)\/?/
 
@@ -14,5 +15,5 @@ export const NetworkChain = createRouteParamDecorator((options, req) => {
     return new NetworkChainRequestEntity(network, chain)
   }
 
-  throw new HttpException('Invalid network or chain requested', HttpStatus.NOT_FOUND)
+  throw HttpNetworkChainNotFoundException
 })

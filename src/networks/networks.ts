@@ -9,6 +9,7 @@ export interface NetworkChain {
   id(): string
   blacklistedDomains(): string[]
   exchangeSupportedTickers(): string[]
+  obtainExchangeTicker(symbol: string)
   validRpcMethods(options?: RpcMethodsOptions)
 }
 

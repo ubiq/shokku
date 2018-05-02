@@ -1,20 +1,22 @@
 import { NetworkChainRequestEntity } from '@/core/entities'
-import { ArgumentMetadata, HttpException, HttpStatus, Pipe, PipeTransform } from '@nestjs/common'
-import { NetworksRepository } from 'networks'
+import { HttpExceptionAdapter } from '@/core/exceptions'
+import { NetworksRepository } from '@/networks'
+import { ArgumentMetadata, Pipe, PipeTransform } from '@nestjs/common'
 
 @Pipe()
 export class NetworkChainValidatorPipe implements PipeTransform<any> {
   constructor(private readonly repository: NetworksRepository) {}
 
   transform(value: any, metadata: ArgumentMetadata) {
-    if (value instanceof NetworkChainRequestEntity) {
-      if (this.repository.hasNetworkChain(value.network, value.chain)) {
-        return value
-      }
-
-      throw new HttpException('Invalid network or chain requested', HttpStatus.NOT_FOUND)
+    if (!(value instanceof NetworkChainRequestEntity)) {
+      return value
     }
 
-    return value
+    try {
+      const chain = this.repository.getNetworkChain(value.network, value.chain)
+      return value
+    } catch (error) {
+      throw HttpExceptionAdapter.toHttpException(error)
+    }
   }
 }

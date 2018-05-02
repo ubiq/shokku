@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { NetworksRepository } from './networks'
+import { NetworkProviderNotFound } from './networks'
 
 describe('networks', () => {
   describe('NetworksRepository', () => {
