@@ -18,7 +18,7 @@ const expectTickerResponse = r => {
   expect(r.body.total_volume_24h).to.be.an('number')
 }
 
-describe('symbols.controller', () => {
+xdescribe('symbols.controller e2e tests', () => {
   let app: INestApplication
 
   beforeAll(async () => {

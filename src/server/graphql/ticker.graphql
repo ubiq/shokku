@@ -2,6 +2,6 @@ type Query {
   ticker: [Ticker]
 }
 
-type Ticer {
+type Ticker {
   id: Int!
 }

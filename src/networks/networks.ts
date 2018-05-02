@@ -1,35 +1,65 @@
 import { Component } from '@nestjs/common'
 import { UbiqNetworksProviderFactory } from '@/networks/ubiq'
 
+// Interfaces
+
 export class NetworkProvider {
   constructor(readonly id: string, readonly networks: Map<string, NetworkChain>) {}
 }
 
 export interface NetworkChain {
   id(): string
-  blacklistedDomains(): string[]
-  exchangeSupportedTickers(): string[]
-  obtainExchangeTicker(symbol: string)
-  validRpcMethods(options?: RpcMethodsOptions)
+  blacklistedDomains(): BlacklistedDomainsResponse
+  exchangeSupportedTickers(): ExchangeTickersResponse
+  obtainExchangeTicker(symbol: string): Promise<TickerResponse>
+  validRpcMethods(): SupportedRpcMethodsResponse
 }
 
-export class RpcMethodsOptions {
-  readonly formatted?: boolean = true
+// Models
+
+export class BlacklistedDomainsResponse {
+  constructor(readonly blacklist: string[]) {}
 }
 
-export class NetworkProviderNotFound extends Error {
+export class ExchangeTickersResponse {
+  constructor(readonly symbols: string[]) {}
+}
+
+export class TickerResponse {
+  constructor(
+    readonly base: string,
+    readonly quote: string,
+    readonly price: string,
+    readonly open_24h: string,
+    readonly low_24h: string,
+    readonly exchange: string,
+    readonly supply: number,
+    readonly market_cap: number,
+    readonly last_update: number,
+    readonly total_volume_24h: string
+  ) {}
+}
+
+export class SupportedRpcMethodsResponse {
+  constructor(readonly get: string[], readonly post: string[]) {}
+}
+
+// Errors
+
+export class NetworkProviderNotFound extends Error {}
+
+export class NetworkChainNotFound extends Error {}
+
+export class TickerExchangeInvalidSymbol extends Error {}
+
+export class TickerExchangeNotAvailable extends Error {
   constructor(...args) {
     super(...args)
-    Error.captureStackTrace(this, NetworkProviderNotFound)
+    Error.captureStackTrace(this, TickerExchangeNotAvailable)
   }
 }
 
-export class NetworkChainNotFound extends Error {
-  constructor(...args) {
-    super(...args)
-    Error.captureStackTrace(this, NetworkChainNotFound)
-  }
-}
+// Factories
 
 export class ShokkuNetworksFactory {
   static create(): Map<string, NetworkProvider> {
@@ -42,6 +72,8 @@ export class ShokkuNetworksFactory {
     return networks
   }
 }
+
+// NestJs Repository
 
 @Component()
 export class NetworksRepository {

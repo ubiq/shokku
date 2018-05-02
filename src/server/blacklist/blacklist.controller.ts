@@ -1,8 +1,8 @@
 import { NetworkChain } from '@/core/decorators'
 import { NetworkChainRequestEntity } from '@/core/entities'
+import { HttpExceptionAdapter } from '@/core/exceptions'
 import BlacklistService from '@/server/blacklist/blacklist.service'
 import { Controller, Get } from '@nestjs/common'
-import { HttpExceptionAdapter } from 'core/exceptions'
 
 @Controller('blacklist')
 export default class BlacklistController {

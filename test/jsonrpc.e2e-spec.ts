@@ -1,7 +1,6 @@
 import { INestApplication } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 import { expect } from 'chai'
-import dotenv from 'dotenv'
 import fs from 'fs'
 import Ganache from 'ganache-core'
 import _ from 'lodash'
@@ -10,10 +9,6 @@ import request from 'supertest'
 import Web3 from 'web3'
 import { utils } from 'web3-core-helpers'
 import { ApplicationModule } from './../src/app.module'
-
-dotenv.config({
-  path: `${__dirname}/../.env.tests`
-})
 
 const xtest = xit
 
@@ -164,7 +159,7 @@ class Ganacher {
   }
 }
 
-describe('jsonrpc.controller', () => {
+xdescribe('jsonrpc.controller e2e tests', () => {
   let app: INestApplication
   let server
   let ganacher: Ganacher

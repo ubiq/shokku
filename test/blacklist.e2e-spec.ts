@@ -4,7 +4,7 @@ import { expect } from 'chai'
 import request from 'supertest'
 import { ApplicationModule } from './../src/app.module'
 
-describe('blacklist.controller e2e tests', () => {
+xdescribe('blacklist.controller e2e tests', () => {
   let app: INestApplication
 
   beforeAll(async () => {
@@ -12,7 +12,7 @@ describe('blacklist.controller e2e tests', () => {
       imports: [ApplicationModule],
     }).compile()
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication()
     await app.init()
   })
 

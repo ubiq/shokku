@@ -35,7 +35,6 @@ export class AppExceptionFilter implements ExceptionFilter {
       if (statusCode >= 500) {
         this.logger.error(responseBody, msg)
         err.message = responseBody.message
-        console.error(err.stack)
       } else {
         this.logger.warn(responseBody, msg)
       }

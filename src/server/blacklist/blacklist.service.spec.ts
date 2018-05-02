@@ -29,7 +29,7 @@ describe('blacklist.service', () => {
       expect(result.blacklist).to.be.an('array')
     })
 
-    it("should throw a NetworkProviderNotFound exception if networkId does not exist", () => {
+    it('should throw a NetworkProviderNotFound exception if networkId does not exist', () => {
       // Incorrect NetworkChainRequest
       const req = new NetworkChainRequestEntity<any>('wrongNetworkId', 'wrongChainId')
 
@@ -37,7 +37,7 @@ describe('blacklist.service', () => {
       expect(service.blacklist(req)).to.throw(NetworkProviderNotFound)
     })
 
-    it("should throw a NetworkChainNotFound exception if networkId exists but chainId does not", () => {
+    it('should throw a NetworkChainNotFound exception if networkId exists but chainId does not', () => {
       // Incorrect NetworkChainRequest
       const req = new NetworkChainRequestEntity<any>('ubiq', 'wrongChainId')
 

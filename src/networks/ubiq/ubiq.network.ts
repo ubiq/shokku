@@ -1,24 +1,29 @@
 import { WEB3_SUPPORTED_RPC_METHODS } from '@/core/web3'
-import { NetworkChain, NetworkProvider } from '@/networks/networks'
+import {
+  NetworkChain,
+  NetworkProvider,
+  TickerResponse,
+  BlacklistedDomainsResponse,
+  ExchangeTickersResponse,
+  SupportedRpcMethodsResponse,
+  TickerExchangeNotAvailable
+} from '@/networks/networks'
 import axios from 'axios'
 const Web3 = require('web3') // tslint:disable-line
 
-const CRYPTOCOMPARE_API = 'https://min-api.cryptocompare.com/data/pricemultifull?fsyms=UBQ&tsyms=BTC,USD,EUR,ETH,LTC'
-
-const metadata = require('./ubiq.metadata.json')
+const network = require('./ubiq.metadata.json') // tslint:disable-line
 
 const createWeb3Provider = () => {
-  const provider = new Web3.providers.HttpProvider(metadata.default_client_url)
+  const provider = new Web3.providers.HttpProvider(network.provider_url)
   const w3 = new Web3(provider)
   w3.extend({
     property: 'safe',
-    methods: WEB3_SUPPORTED_RPC_METHODS,
+    methods: WEB3_SUPPORTED_RPC_METHODS
   })
   return w3
 }
 
 abstract class BaseUbiqNetworkService implements NetworkChain {
-
   readonly w3: Web3
 
   constructor() {
@@ -29,56 +34,58 @@ abstract class BaseUbiqNetworkService implements NetworkChain {
     return ''
   }
 
-  blacklistedDomains(): string[] {
-    return metadata.blacklist
+  blacklistedDomains(): BlacklistedDomainsResponse {
+    return new BlacklistedDomainsResponse(network.blacklist)
   }
 
-  exchangeSupportedTickers(): string[] {
-    return metadata.exchange_tickers
+  exchangeSupportedTickers(): ExchangeTickersResponse {
+    return new ExchangeTickersResponse(network.exchange_tickers)
   }
 
-  validRpcMethods(options?: any) {
-    return options.formatted ? metadata.supported_rpc_methods_as_request : metadata.supported_rpc_methods
+  validRpcMethods(): SupportedRpcMethodsResponse {
+    return new SupportedRpcMethodsResponse(network.supported_rpc_methods.get, network.supported_rpc_methods.post)
   }
 
-  async obtainExchangeTicker(symbol: string) {
-    const res = await axios(CRYPTOCOMPARE_API)
-    return this.toTickerJson(symbol, res.data)
-  }
-
-  private toTickerJson(symbol: string, json) {
-    const currency = symbol.replace('ubq', '').toUpperCase()
-    return {
-      base: json.RAW.UBQ[currency].FROMSYMBOL,
-      quote: json.RAW.UBQ[currency].TOSYMBOL,
-      price: json.RAW.UBQ[currency].PRICE,
-      open_24h: json.RAW.UBQ[currency].OPEN24HOUR,
-      low_24h: json.RAW.UBQ[currency].LOW24HOUR,
-      exchange: json.RAW.UBQ[currency].LASTMARKET,
-      supply: json.RAW.UBQ[currency].SUPPLY,
-      market_cap: json.RAW.UBQ[currency].MKTCAP,
-      last_update: json.RAW.UBQ[currency].LASTUPDATE,
-      total_volume_24h: json.RAW.UBQ[currency].TOTALVOLUME24H
+  async obtainExchangeTicker(symbol: string): Promise<TickerResponse> {
+    try {
+      const res = await axios('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=UBQ&tsyms=BTC,USD,EUR,ETH,LTC')
+      return this.toTickerResponse(symbol, res.data)
+    } catch (error) {
+      throw new TickerExchangeNotAvailable(error)
     }
+  }
+
+  private toTickerResponse(symbol: string, json) {
+    const currency = symbol.replace('ubq', '').toUpperCase()
+
+    const base = json.RAW.UBQ[currency].FROMSYMBOL
+    const quote = json.RAW.UBQ[currency].TOSYMBOL
+    const price = json.RAW.UBQ[currency].PRICE
+    const open_24h = json.RAW.UBQ[currency].OPEN24HOUR
+    const low_24h = json.RAW.UBQ[currency].LOW24HOUR
+    const exchange = json.RAW.UBQ[currency].LASTMARKET
+    const supply = json.RAW.UBQ[currency].SUPPLY
+    const market_cap = json.RAW.UBQ[currency].MKTCAP
+    const last_update = json.RAW.UBQ[currency].LASTUPDATE
+    const total_volume_24h = json.RAW.UBQ[currency].TOTALVOLUME24H
+
+    return new TickerResponse(base, quote, price, open_24h, low_24h, exchange, supply, market_cap, last_update, total_volume_24h)
   }
 }
 
 class UbiqMainnetNetworkService extends BaseUbiqNetworkService {
-
   id() {
     return 'mainnet'
   }
 }
 
 class UbiqTestnetNetworkService extends BaseUbiqNetworkService {
-
   id() {
     return 'testnet'
   }
 }
 
 export class UbiqNetworksProviderFactory {
-
   constructor() {}
 
   static create(options?: object): NetworkProvider {

@@ -28,7 +28,7 @@ export default class JsonRpcPipe implements PipeTransform<any> {
 
   private isValidMetatype(metatype): boolean {
     const types = [Array, Object]
-    return !types.find((type) => metatype === type)
+    return !types.find(type => metatype === type)
   }
 
   private throwInvalidParamsException(): never {

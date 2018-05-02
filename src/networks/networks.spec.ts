@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { NetworkProviderNotFound } from './networks'
+import { NetworkProviderNotFound, NetworksRepository } from './networks'
 
 describe('networks', () => {
   describe('NetworksRepository', () => {
@@ -10,7 +10,7 @@ describe('networks', () => {
     })
 
     describe('getAll() method', () => {
-      it('should return create a complete list of registered NetworksProviders', () => {
+      it('should create a complete list of registered NetworksProviders', () => {
         const networksProviders = repository.getAllNetworkProviders()
         expect(networksProviders).to.be.an('array').to.have.lengthOf(1)
       })
@@ -22,9 +22,8 @@ describe('networks', () => {
         expect(networkProvider).to.exist
       })
 
-      it('it should not return concrete NetworkProvider by :id if is not registered', () => {
-        const networkProvider = repository.getNetworkProvider('')
-        expect(networkProvider).to.be.undefined
+      it('it should throw a NetworkProviderNotFound exception if NetworkProvider :id is not registered', () => {
+        expect(repository.getNetworkProvider('')).to.throw(NetworkProviderNotFound)
       })
     })
   })

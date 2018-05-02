@@ -25,7 +25,8 @@
     "variable-name": [false],
     "one-line": [false],
     "one-variable-per-declaration": [true, "ignore-for-loop"],
-    "prefer-const": true
+    "prefer-const": true,
+    "trailing-comma": false
   },
   "rulesDirectory": []
 }
