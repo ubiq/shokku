@@ -7,7 +7,7 @@ describe('app.controller', () => {
 
   beforeAll(async () => {
     const app = await Test.createTestingModule({
-      controllers: [AppController],
+      controllers: [AppController]
     }).compile()
 
     controller = app.get<AppController>(AppController)
@@ -15,7 +15,7 @@ describe('app.controller', () => {
 
   describe('root() method', () => {
     test('when calling root() | resp -> []', () => {
-      expect(controller.root()).to.equals([])
+      expect(controller.root()).to.be.an('array').that.is.empty
     })
   })
 })

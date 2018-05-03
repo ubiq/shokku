@@ -1,7 +1,7 @@
+import { HttpException } from '@nestjs/common'
 import { Test } from '@nestjs/testing'
 import { expect } from 'chai'
 import { NetworkChainRequestEntity } from '../../core/entities/network-chain-request.entity'
-import { HttpNetworkChainNotFoundException, HttpNetworkNotFoundException } from '../../core/exceptions/network.exceptions'
 import { NetworksRepository } from '../../networks/networks'
 import BlacklistController from './blacklist.controller'
 import BlacklistService from './blacklist.service'
@@ -41,20 +41,30 @@ describe('blacklist.controller', () => {
       expect(result.blacklist).to.be.an('array')
     })
 
-    it("should throw a HttpNetworkNotFoundException exception if networkId does not exist", () => {
+    it('should throw a HttpNetworkNotFoundException exception if networkId does not exist', () => {
       // Incorrect NetworkChainRequest
       const req = new NetworkChainRequestEntity<any>('wrongNetworkId', 'wrongChainId')
 
-      // Call service and assert
-      expect(service.blacklist(req)).to.throw(HttpNetworkNotFoundException)
+      // Throw fn
+      const toTest = function() {
+        controller.root(req)
+      }
+
+      // Call controller and assert
+      expect(toTest).to.throw(HttpException)
     })
 
-    it("should throw a HttpNetworkChainNotFoundException exception if networkId exists but chainId does not", () => {
+    it('should throw a HttpNetworkChainNotFoundException exception if networkId exists but chainId does not', () => {
       // Incorrect NetworkChainRequest
       const req = new NetworkChainRequestEntity<any>('ubiq', 'wrongChainId')
 
-      // Call service and assert
-      expect(service.blacklist(req)).to.throw(HttpNetworkChainNotFoundException)
+      // Throw fn
+      const toTest = function() {
+        controller.root(req)
+      }
+
+      // Call controller and assert
+      expect(toTest).to.throw(HttpException)
     })
   })
 })

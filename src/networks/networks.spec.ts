@@ -12,7 +12,9 @@ describe('networks', () => {
     describe('getAll() method', () => {
       it('should create a complete list of registered NetworksProviders', () => {
         const networksProviders = repository.getAllNetworkProviders()
-        expect(networksProviders).to.be.an('array').to.have.lengthOf(1)
+        expect(networksProviders)
+          .to.be.an('array')
+          .to.have.lengthOf(1)
       })
     })
 
@@ -23,7 +25,13 @@ describe('networks', () => {
       })
 
       it('it should throw a NetworkProviderNotFound exception if NetworkProvider :id is not registered', () => {
-        expect(repository.getNetworkProvider('')).to.throw(NetworkProviderNotFound)
+        // throw fn
+        const toThrow = function() {
+          repository.getNetworkProvider('')
+        }
+
+        // assert
+        expect(toThrow).to.throw(NetworkProviderNotFound)
       })
     })
   })
@@ -38,9 +46,10 @@ describe('networks', () => {
     describe('create() method', () => {
       it('should return a complete list of registered NetworksProviders', () => {
         const networksProviders = repository.getAllNetworkProviders()
-        expect(networksProviders).to.be.an('array').to.have.lengthOf(1)
+        expect(networksProviders)
+          .to.be.an('array')
+          .to.have.lengthOf(1)
       })
     })
   })
-
 })

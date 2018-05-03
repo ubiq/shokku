@@ -8,8 +8,6 @@ export default class BlacklistService {
 
   blacklist(entity: NetworkChainRequestEntity<any>) {
     const chain = this.networksRepository.getNetworkChain(entity.network, entity.chain)
-    return {
-      blacklist: chain.blacklistedDomains()
-    }
+    return chain.blacklistedDomains()
   }
 }
