@@ -7,7 +7,7 @@ import _ from 'lodash'
 import solc from 'solc'
 import request from 'supertest'
 import Web3 from 'web3'
-import { utils } from 'web3-core-helpers'
+import { formatters } from 'web3-core-helpers'
 import { ApplicationModule } from './../src/app.module'
 
 const xtest = xit
@@ -50,17 +50,17 @@ class Ganacher {
       accounts: [{
         address: '0x627306090abaB3A6e1400e9345bC60c78a8BEf57',
         secretKey: '0xc87509a1c067bbde78beb793e6fa76530b6382a4c0241e5e4a9ec0a0f44dc0d3',
-        balance: utils.toWei('100000', 'ether')
+        balance: formatters.toWei('100000', 'ether')
       },
       {
         address: '0xf17f52151EbEF6C7334FAD080c5704D77216b732',
         secretKey: '0xf9b2d466cfe82a6e9209bb87dd0de7e63fe893d7625160c9fc663452b52eaa06',
-        balance: utils.toWei('10000', 'ether')
+        balance: formatters.toWei('10000', 'ether')
       },
       {
         address: '0xC5fdf4076b8F3A5357c5E395ab970B5B54098Fef',
         secretKey: '0x109d8195d7a1b7e00d3538bafc0f23af2c6e6482b8cc780a10264284779a7adb',
-        balance: utils.toWei('1000', 'ether')
+        balance: formatters.toWei('1000', 'ether')
       }
       ]
     }
@@ -95,21 +95,21 @@ class Ganacher {
     const tx1 = {
       from: accounts[0].address,
       to: accounts[1].address,
-      value: utils.toWei('1', 'ether')
+      value: formatters.toWei('1', 'ether')
     }
     await this.web3.eth.sendTransaction(tx1).catch(e => e)
 
     const tx2 = {
       from: accounts[2].address,
       to: accounts[1].address,
-      value: utils.toWei('50', 'ether')
+      value: formatters.toWei('50', 'ether')
     }
     await this.web3.eth.sendTransaction(tx2).catch(e => e)
 
     const tx3 = {
       from: accounts[2].address,
       to: accounts[0].address,
-      value: utils.toWei('200', 'ether')
+      value: formatters.toWei('200', 'ether')
     }
     await this.web3.eth.sendTransaction(tx3).catch(e => e)
 

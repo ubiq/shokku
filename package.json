@@ -10,7 +10,7 @@
     "start:dev": "nodemon",
     "build:clean": "rm -rf dist",
     "build:prod": "tsc",
-    "test:run": "jest",
+    "test:run": "jest --config ./test/jest-unit.json",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:cov": "jest --coverage",
     "format": "prettier --write \"**/*.ts\"",
@@ -76,22 +76,5 @@
     "ts-node": "^4.1.0",
     "tsconfig-paths": "^3.1.1",
     "tslint": "5.3.2"
-  },
-  "jest": {
-    "rootDir": ".",
-    "moduleNameMapper": {
-      "^@/(.*)": "<rootDir>/src/$1"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts",
-      "node"
-    ],
-    "testRegex": ".spec.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "coverageDirectory": "../coverage"
   }
 }

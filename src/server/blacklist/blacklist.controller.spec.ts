@@ -10,7 +10,7 @@ describe('blacklist.controller', () => {
   let controller: BlacklistController
   let service: BlacklistService
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const module = await Test.createTestingModule({
       controllers: [BlacklistController],
       components: [NetworksRepository, BlacklistService]
@@ -41,20 +41,20 @@ describe('blacklist.controller', () => {
       expect(result.blacklist).to.be.an('array')
     })
 
-    it('should throw a HttpNetworkNotFoundException exception if networkId does not exist', () => {
+    it('should throw a HttpNetworkNotFoundException if networkId does not exist', () => {
       // Incorrect NetworkChainRequest
       const req = new NetworkChainRequestEntity<any>('wrongNetworkId', 'wrongChainId')
 
       // Throw fn
       const toTest = function() {
-        controller.root(req)
+        const a = controller.root(req)
       }
 
       // Call controller and assert
       expect(toTest).to.throw(HttpException)
     })
 
-    it('should throw a HttpNetworkChainNotFoundException exception if networkId exists but chainId does not', () => {
+    it('should throw a HttpNetworkChainNotFoundException if networkId exists but chainId does not', () => {
       // Incorrect NetworkChainRequest
       const req = new NetworkChainRequestEntity<any>('ubiq', 'wrongChainId')
 

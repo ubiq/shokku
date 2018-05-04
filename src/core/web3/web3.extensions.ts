@@ -1,7 +1,6 @@
 import { isEthAddress, isEthBlockTag, isEthNonce, isEthTxHash, isHex, toBoolean } from '@/core/validation/eth.helpers'
 import { Joi, JoiRpcSchemas } from '@/core/validation/joi'
 import _ from 'lodash'
-import { errors } from 'web3-core-helpers'
 const Method = require('web3-core-method') // tslint:disable-line
 
 /** Override basic web3 'Method' class to allow having better params validation */

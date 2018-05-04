@@ -1,7 +1,7 @@
 import { NetworkChainRequestEntity } from '@/core/entities'
 import { NetworksRepository } from '@/networks'
 import { Component } from '@nestjs/common'
-import { HttpExceptionAdapter } from 'core/exceptions'
+import { HttpExceptionAdapter } from '@/core/exceptions'
 
 @Component()
 export default class TickerService {
