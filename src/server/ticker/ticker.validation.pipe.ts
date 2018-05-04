@@ -1,4 +1,4 @@
-import { PipeTransform, Pipe, ArgumentMetadata, NotFoundException } from '@nestjs/common'
+import { ArgumentMetadata, NotFoundException, Pipe, PipeTransform } from '@nestjs/common'
 
 const validatorOpts = {}
 

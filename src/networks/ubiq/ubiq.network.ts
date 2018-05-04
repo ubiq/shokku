@@ -48,26 +48,25 @@ abstract class BaseUbiqNetworkService implements NetworkChain {
 
   async obtainExchangeTicker(symbol: string): Promise<TickerResponse> {
     try {
-      const res = await axios('https://min-api.cryptocompare.com/data/pricemultifull?fsyms=UBQ&tsyms=BTC,USD,EUR,ETH,LTC')
-      return this.toTickerResponse(symbol, res.data)
+      const toCurrency = symbol.replace('ubq', '').toUpperCase()
+      const res = await axios(`https://min-api.cryptocompare.com/data/pricemultifull?fsyms=UBQ&tsyms=${toCurrency}`)
+      return this.toTickerResponse(toCurrency, res.data)
     } catch (error) {
       throw new TickerExchangeNotAvailable(error)
     }
   }
 
   private toTickerResponse(symbol: string, json) {
-    const currency = symbol.replace('ubq', '').toUpperCase()
-
-    const base = json.RAW.UBQ[currency].FROMSYMBOL
-    const quote = json.RAW.UBQ[currency].TOSYMBOL
-    const price = json.RAW.UBQ[currency].PRICE
-    const open_24h = json.RAW.UBQ[currency].OPEN24HOUR
-    const low_24h = json.RAW.UBQ[currency].LOW24HOUR
-    const exchange = json.RAW.UBQ[currency].LASTMARKET
-    const supply = json.RAW.UBQ[currency].SUPPLY
-    const market_cap = json.RAW.UBQ[currency].MKTCAP
-    const last_update = json.RAW.UBQ[currency].LASTUPDATE
-    const total_volume_24h = json.RAW.UBQ[currency].TOTALVOLUME24H
+    const base = json.RAW.UBQ[symbol].FROMSYMBOL
+    const quote = json.RAW.UBQ[symbol].TOSYMBOL
+    const price = json.RAW.UBQ[symbol].PRICE
+    const open_24h = json.RAW.UBQ[symbol].OPEN24HOUR
+    const low_24h = json.RAW.UBQ[symbol].LOW24HOUR
+    const exchange = json.RAW.UBQ[symbol].LASTMARKET
+    const supply = json.RAW.UBQ[symbol].SUPPLY
+    const market_cap = json.RAW.UBQ[symbol].MKTCAP
+    const last_update = json.RAW.UBQ[symbol].LASTUPDATE
+    const total_volume_24h = json.RAW.UBQ[symbol].TOTALVOLUME24H
 
     return new TickerResponse(base, quote, price, open_24h, low_24h, exchange, supply, market_cap, last_update, total_volume_24h)
   }

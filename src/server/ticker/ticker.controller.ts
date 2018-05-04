@@ -2,7 +2,8 @@ import { NetworkChain } from '@/core/decorators'
 import { NetworkChainRequestEntity } from '@/core/entities'
 import { HttpExceptionAdapter } from '@/core/exceptions'
 import TickerService from '@/server/ticker/ticker.service'
-import { Controller, Get, Param } from '@nestjs/common'
+import TickerValidationPipe from '@/server/ticker/ticker.validation.pipe'
+import { Controller, Get, Param, UsePipes } from '@nestjs/common'
 
 @Controller('ticker')
 export default class TickerController {
@@ -18,6 +19,7 @@ export default class TickerController {
   }
 
   @Get(':network/:chain/:symbol')
+  @UsePipes(new TickerValidationPipe())
   async symbol(@NetworkChain() req: NetworkChainRequestEntity<any>, @Param('symbol') params) {
     const symbol = params.symbol
     try {
