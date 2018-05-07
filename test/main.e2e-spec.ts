@@ -8,10 +8,10 @@ xdescribe('main.controller e2e tests', () => {
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
-      imports: [ApplicationModule],
+      imports: [ApplicationModule]
     }).compile()
 
-    app = moduleFixture.createNestApplication();
+    app = moduleFixture.createNestApplication()
     await app.init()
   })
 

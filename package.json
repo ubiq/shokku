@@ -12,7 +12,7 @@
     "build:prod": "tsc",
     "test:run": "jest --config ./test/jest-unit.json",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:cov": "jest --coverage",
+    "test:cov": "jest --config ./test/jest-unit.json --coverage",
     "format": "prettier --write \"**/*.ts\"",
     "lint": "tslint --config tslint.json --project .",
     "shokku-cli": "ts-node ./bin/shokku-cli.ts"

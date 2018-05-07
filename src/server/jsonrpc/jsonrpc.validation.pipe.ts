@@ -6,7 +6,7 @@ const validatorOpts = {
   skipMissingProperties: true,
   whitelist: true,
   forbidNonWhitelisted: true,
-  forbidUnknownValues: true,
+  forbidUnknownValues: true
 }
 
 @Pipe()

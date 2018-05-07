@@ -52,12 +52,7 @@ export class NetworkChainNotFound extends Error {}
 
 export class TickerExchangeInvalidSymbol extends Error {}
 
-export class TickerExchangeNotAvailable extends Error {
-  constructor(...args) {
-    super(...args)
-    Error.captureStackTrace(this, TickerExchangeNotAvailable)
-  }
-}
+export class TickerExchangeNotAvailable extends Error {}
 
 // Factories
 

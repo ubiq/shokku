@@ -15,22 +15,10 @@ import { RouterModule } from 'nest-router'
 
 @Global()
 @Module({
-  imports: [
-    RouterModule.forRoutes(routes),
-    BlacklistModule,
-    JsonRpcModule,
-    TickerModule,
-    GraphQLModule
-  ],
-  exports: [
-    NetworksRepository
-  ],
-  controllers: [
-    AppController,
-  ],
-  components: [
-    NetworksRepository
-  ]
+  imports: [RouterModule.forRoutes(routes), BlacklistModule, JsonRpcModule, TickerModule, GraphQLModule],
+  exports: [NetworksRepository],
+  controllers: [AppController],
+  components: [NetworksRepository]
 })
 export class ApplicationModule {
   constructor(private readonly graphQLFactory: GraphQLFactory) {}
@@ -40,20 +28,14 @@ export class ApplicationModule {
     const typeDefs = this.graphQLFactory.mergeTypesByPaths('./**/*.graphql')
     const schema = this.graphQLFactory.createSchema({ typeDefs })
     const qraphql = graphqlExpress(req => ({ rootValue: req, schema } as GraphQLServerOptions))
-    consumer
-      .apply(qraphql)
-      .forRoutes({ path: '/graphql', method: RequestMethod.ALL })
+    consumer.apply(qraphql).forRoutes({ path: '/graphql', method: RequestMethod.ALL })
 
     // GraphiQL
     graphiqlExpress(req => ({ endpointURL: '/graphiql' } as GraphiQLData))
-    consumer
-      .apply(graphql)
-      .forRoutes({ path: '/graphiql', method: RequestMethod.ALL })
+    consumer.apply(graphql).forRoutes({ path: '/graphiql', method: RequestMethod.ALL })
 
     // Morgan
     MorganMiddleware.configure('tiny')
-    consumer
-      .apply(MorganMiddleware)
-      .forRoutes({ path: '*', method: RequestMethod.ALL })
+    consumer.apply(MorganMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL })
   }
 }
