@@ -1,16 +1,16 @@
 {
   "name": "shokku",
-  "description": "Shokku - An open source scalable blockchain infrastructure for Ubiq, Ethereum and IPFS",
+  "description": "Shokku - An open source scalable blockchain infrastructure for Ubiq, Ethereum, Ethereum Classic, POA and IPFS",
   "version": "0.1.0",
   "author": "@aldoborrero",
   "license": "Apache License 2.0",
   "private": true,
   "scripts": {
-    "start:prod": "node dist/main.js",
+    "start:prod": "yarn run build:prod && node dist/main.js",
     "start:dev": "nodemon",
     "build:clean": "rm -rf dist",
     "build:prod": "tsc",
-    "test:run": "jest --config ./test/jest-unit.json",
+    "test:unit": "jest --config ./test/jest-unit.json",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:cov": "jest --config ./test/jest-unit.json --coverage",
     "format": "prettier --write \"**/*.ts\"",
@@ -50,7 +50,6 @@
     "web3-utils": "^1.0.0-beta.34"
   },
   "devDependencies": {
-    "@types/commander": "^2.12.2",
     "@types/express": "^4.0.39",
     "@types/handlebars": "^4.0.37",
     "@types/jest": "^21.1.8",
