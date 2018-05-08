@@ -1,14 +1,13 @@
 import { NetworkChain } from '@/core/decorators'
 import { NetworkChainRequestEntity } from '@/core/entities'
-import { NetworkChainValidatorPipe } from '@/core/pipes'
+import { HttpExceptionAdapter } from '@/core/exceptions'
 import JsonRpcEntity from '@/server/jsonrpc/jsonrpc.entity'
 import JsonRpcService from '@/server/jsonrpc/jsonrpc.service'
-import { Controller, Get, Post, UsePipes } from '@nestjs/common'
+import { Controller, Get, Post } from '@nestjs/common'
 
 @Controller('jsonrpc')
 export default class JsonRpcController {
-  constructor(private readonly jsonRpcService: JsonRpcService) {
-  }
+  constructor(private readonly jsonRpcService: JsonRpcService) {}
 
   @Get('networks')
   networks() {
@@ -16,13 +15,24 @@ export default class JsonRpcController {
   }
 
   @Get(':network/chains')
-  chains(@NetworkChain() req: NetworkChainRequestEntity<JsonRpcEntity>) {
-    return this.jsonRpcService.chains(req)
+  chains(
+    @NetworkChain({ ignoreChain: true })
+    req: NetworkChainRequestEntity<JsonRpcEntity>
+  ) {
+    try {
+      return this.jsonRpcService.chains(req)
+    } catch (err) {
+      throw HttpExceptionAdapter.toHttpException(err)
+    }
   }
 
   @Get(':network/:chain/methods')
   methods(@NetworkChain() req: NetworkChainRequestEntity<JsonRpcEntity>) {
-    return this.jsonRpcService.methods(req)
+    try {
+      return this.jsonRpcService.methods(req)
+    } catch (err) {
+      throw HttpExceptionAdapter.toHttpException(err)
+    }
   }
 
   @Get(':network/:chain/:method')
@@ -30,7 +40,7 @@ export default class JsonRpcController {
     try {
       return this.jsonRpcService.rpcMethod(req)
     } catch (err) {
-      this.toHttpException(err)
+      throw HttpExceptionAdapter.toHttpException(err)
     }
   }
 
@@ -39,11 +49,7 @@ export default class JsonRpcController {
     try {
       return this.jsonRpcService.rpcMethod(req)
     } catch (err) {
-      this.toHttpException(err)
+      throw HttpExceptionAdapter.toHttpException(err)
     }
-  }
-
-  private toHttpException(error: Error): never {
-    throw new Error('Not implemented yet!')
   }
 }

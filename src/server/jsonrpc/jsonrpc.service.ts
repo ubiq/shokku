@@ -1,5 +1,5 @@
 import { NetworkChainRequestEntity } from '@/core/entities'
-import { NetworksRepository } from '@/networks/networks'
+import { NetworksRepository, SupportedRpcMethodsResponse } from '@/networks/networks'
 import JsonRpcEntity from '@/server/jsonrpc/jsonrpc.entity'
 import { Component } from '@nestjs/common'
 
@@ -13,15 +13,14 @@ export default class JsonRpcService {
   }
 
   chains(entity: NetworkChainRequestEntity<any>): object {
-    // const n = this.repository.get(network)
-    // const chains = Array.from(n.networks.keys())
-    // return { chains }
-    return {}
+    const network = this.repository.getNetworkProvider(entity.network)
+    const chains = Array.from(network.networks.keys())
+    return { chains }
   }
 
-  methods(entity: NetworkChainRequestEntity<any>): object {
-    // const n = this.repository.get(network)
-    return {}
+  methods(entity: NetworkChainRequestEntity<any>): SupportedRpcMethodsResponse {
+    const chain = this.repository.getNetworkChain(entity.network, entity.chain)
+    return chain.validRpcMethods()
   }
 
   rpcMethod(entity: NetworkChainRequestEntity<JsonRpcEntity>): object {

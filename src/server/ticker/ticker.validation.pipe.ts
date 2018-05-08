@@ -1,4 +1,5 @@
 import { ArgumentMetadata, NotFoundException, Pipe, PipeTransform } from '@nestjs/common'
+import { HttpTickerInvalidExchangeSymbolException } from '@/core/exceptions'
 
 const validatorOpts = {}
 
@@ -9,6 +10,6 @@ export default class TickerValidationPipe implements PipeTransform<any> {
   }
 
   private invalidTickerException(): never {
-    throw new NotFoundException('Invalid ticker requested')
+    throw HttpTickerInvalidExchangeSymbolException
   }
 }

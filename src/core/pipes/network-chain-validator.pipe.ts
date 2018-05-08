@@ -13,10 +13,19 @@ export class NetworkChainValidatorPipe implements PipeTransform<any> {
     }
 
     try {
-      const chain = this.repository.getNetworkChain(value.network, value.chain)
+      this.validate(value)
       return value
     } catch (error) {
       throw HttpExceptionAdapter.toHttpException(error)
     }
+  }
+
+  private validate(value: NetworkChainRequestEntity<any>) {
+    if (value.ignoreChain) {
+      this.repository.getNetworkProvider(value.network)
+      return
+    }
+
+    this.repository.getNetworkChain(value.network, value.chain)
   }
 }
