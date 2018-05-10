@@ -1,5 +1,5 @@
 import { IsString, IsInt, IsPositive, IsNumberString, Contains, IsArray } from 'class-validator'
-import { IsRpcMethod } from '@/core/decorators'
+import { IsRpcMethod } from '@/server/jsonrpc/is-rpc-method.decorator'
 
 export default class JsonRpcEntity {
   @IsInt()

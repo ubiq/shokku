@@ -4,7 +4,7 @@ import { createRouteParamDecorator } from '@nestjs/common'
 
 const NETWORK_CHAIN_REGEX = /^\/(\w+)\/(\w+)\/?/
 
-declare type NetworkChainOptions = {
+interface NetworkChainOptions {
   ignoreChain: boolean
 }
 
@@ -16,7 +16,7 @@ export const NetworkChain = createRouteParamDecorator((options?: NetworkChainOpt
     const network = match[1]
     const chain = options && options.ignoreChain ? '' : match[2]
 
-    return new NetworkChainRequestEntity(network, chain, chain === '')
+    return new NetworkChainRequestEntity(req, network, chain, chain === '')
   }
 
   throw HttpNetworkChainNotFoundException
