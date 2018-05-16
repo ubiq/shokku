@@ -1,0 +1,100 @@
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ssd
+parameters:
+  type: pd-ssd
+provisioner: kubernetes.io/gce-pd
+reclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ubiq-master-data
+  namespace: ubiq
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: ssd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: gubiq-rpc
+  name: gubiq-rpc
+  namespace: ubiq
+spec:
+  ports:
+    - name: gubiq-rpc
+      protocol: TCP
+      port: 8588
+      targetPort: 8588
+  selector:
+    app: gubiq
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: gubiq-mstr-p2p
+  name: gubiq-mstr-p2p
+  namespace: ubiq
+spec:
+  ports:
+    - name: gubiq-mstr-p2p
+      protocol: TCP
+      port: 30388
+      targetPort: 30388
+  type: LoadBalancer
+  selector:
+    gubiq: master
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gubiq-master
+  labels:
+    app: gubiq
+    gubiq: master
+  namespace: ubiq
+spec:
+  selector:
+    matchLabels:
+      app: gubiq
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gubiq
+        gubiq: master
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: gubiq
+                operator: In
+                values:
+                - backup
+            topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: gubiq
+        image: ubiqsmart/gubiq
+        ports:
+        - containerPort: 8588
+        - containerPort: 30388
+        volumeMounts:
+        - mountPath: /usr/share/ubiq
+          name: gubiq-pd
+        command: ["gubiq"]
+        args: ["--rpcapi", "eth,web3,net", "--rpc", "--rpcaddr", "0.0.0.0", "--maxpeers", "300", "--datadir", "/usr/share/ubiq"]
+      volumes:
+      - name: gubiq-pd
+        persistentVolumeClaim:
+          claimName: ubiq-master-data
